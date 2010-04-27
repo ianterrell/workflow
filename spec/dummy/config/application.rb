@@ -7,7 +7,7 @@ require "action_view/railtie"
 require "action_mailer/railtie"
 
 Bundler.require
-require "workflow"
+require "constellation/workflow"
 
 module Dummy
   class Application < Rails::Application

@@ -1,4 +1,4 @@
-require 'constellation/admin'
+require 'constellation/workflow'
 require 'rails'
 
 module Constellation

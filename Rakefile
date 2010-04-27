@@ -18,7 +18,7 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-spec = Gem::Specification.new do |s|
+spec = Gem::Specification.new do |gem|
   gem.name = "constellation-workflow"
   gem.summary = "A module for managing long running business processes."
   gem.description = "A module for managing long running business processes."
@@ -34,7 +34,7 @@ spec = Gem::Specification.new do |s|
 
   This is not free software!
 
-  Please see the full license at http://github.com/constellationsoft/admin/blob/master/LICENSE
+  Please see the full license at http://github.com/constellationsoft/workflow/blob/master/LICENSE
 
 #{"*"*50}
 EOM

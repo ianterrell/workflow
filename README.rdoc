@@ -1,4 +1,4 @@
-<b>This is not free software.  See LICENSE for details.</b>
+<b>This is not free software.</b>  See LICENSE for details.
 
 = Constellation Workflow
 
@@ -6,4 +6,4 @@ Description goes here.
 
 == Copyright
 
-Copyright (c) 2010 Constellation Software. <b>This is not free software.  See LICENSE for details.</b>
+Copyright (c) 2010 Constellation Software. <b>This is not free software.</b>  See LICENSE for details.

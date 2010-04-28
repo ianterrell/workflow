@@ -1,5 +1,4 @@
 <b>This is not free software.</b>  See LICENSE for details.
-
 = Constellation Workflow
 
 Constellation Workflow is a business process management engine written in Ruby using ActiveRecord for persistence.
@@ -10,7 +9,7 @@ Workflow is the management of long running processes in your application, with t
 
 A common use case in content management systems is having different stakeholders create, copyedit, proofread, approve, and publish content, with some actions occurring in sequence and some in parallel.  A common use case in e-commerce systems is processing orders:  picking, packing, and shipping the items, potentially in parallel from different warehouses, and charging the customer only when the items are shipped.
 
-Constellation Workflow draws much inspiration from the Java project jBPM (http://www.jboss.org/jbpm/) and the work of The Workflow Patterns Initiative (http://workflowpatterns.com/).
+Constellation Workflow draws much inspiration from the Java project jBPM (http://www.jboss.org/jbpm) and the work of The Workflow Patterns Initiative (http://workflowpatterns.com).
 
 == Distinguishing Features
 
@@ -30,7 +29,7 @@ Constellation Workflow is under active development by Constellation Software.  V
 * DelayedJob-managed automated tasks
 * Amazon SNS and SQS managed automated tasks
 
-Future iterations will include additional patterns from The Workflow Patterns Initiative (http://workflowpatterns.com/) and the needs of our community.
+Future iterations will include additional patterns from The Workflow Patterns Initiative (http://workflowpatterns.com) and the needs of our community.
 
 === Copyright
 

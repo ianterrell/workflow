@@ -2,8 +2,36 @@
 
 = Constellation Workflow
 
-Description goes here.
+Constellation Workflow is a business process management engine written in Ruby using ActiveRecord for persistence.
 
-== Copyright
+== What is workflow?
+
+Workflow is the management of long running processes in your application, with the word process meaning what normal people mean by it and not we programmers.  Like all problems in software, this can be approached in a number of ways, including simple state machine implementations or even simpler state management approaches (think booleans).  However, using an external, data-driven workflow engine separates the concerns of a changing workflow from your core application, allowing quicker time to market and greater flexibility in adapting to the changes in the real-life workflow that your application supports.
+
+A common use case in content management systems is having different stakeholders create, copyedit, proofread, approve, and publish content, with some actions occurring in sequence and some in parallel.  A common use case in e-commerce systems is processing orders:  picking, packing, and shipping the items, potentially in parallel from different warehouses, and charging the customer only when the items are shipped.
+
+Constellation Workflow draws much inspiration from the Java project jBPM (http://www.jboss.org/jbpm/) and the work of The Workflow Patterns Initiative (http://workflowpatterns.com/).
+
+== Distinguishing Features
+
+* Constellation Workflow is designed for developers and business users to be able to work together.
+* Automated tasks can be managed with DelayedJob, Amazon's Simple Notification Service or Simple Queue Service, or a custom implementation you provide.
+* The interface to workflow uses all the prettiness Ruby is capable of.
+* Processes can be specified in Ruby or YAML, and can be created with our graphical creation web tool.
+
+== Development Roadmap
+
+Constellation Workflow is under active development by Constellation Software.  Version 1 will include functionality common to most simple but non-trivial workflow processes, and includes support for
+
+* Sequential and parallel processes
+* Timer-initiated actions
+* User tasks
+* Custom automated task nodes
+* DelayedJob-managed automated tasks
+* Amazon SNS and SQS managed automated tasks
+
+Future iterations will include additional patterns from The Workflow Patterns Initiative (http://workflowpatterns.com/) and the needs of our community.
+
+=== Copyright
 
 Copyright (c) 2010 Constellation Software. <b>This is not free software.</b>  See LICENSE for details.

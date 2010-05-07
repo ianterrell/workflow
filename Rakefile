@@ -25,7 +25,7 @@ spec = Gem::Specification.new do |gem|
   gem.email = "ian@constellationsoft.com;jeff@constellationsoft.com"
   gem.homepage = "http://github.com/constellationsoft/workflow"
   gem.authors = ["Ian Terrell", "Jeff Bozek"]
-  gem.files = Dir["{lib}/**/*.rb", "{app}/**/*", "{config}/**/*"]
+  gem.files = Dir["{lib}/**/*", "{app}/**/*", "{config}/**/*"]
   gem.version = "0.0.1"
   gem.post_install_message = <<-EOM
 #{"*"*50}

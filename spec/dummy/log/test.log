@@ -1,0 +1,368 @@
+  [1m[36mSQL (0.3ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.2ms)[0m  select sqlite_version(*)
+  [1m[36mSQL (3.0ms)[0m  [1mCREATE TABLE "schema_migrations" ("version" varchar(255) NOT NULL) [0m
+  [1m[35mSQL (3.3ms)[0m  CREATE UNIQUE INDEX "unique_schema_migrations" ON "schema_migrations" ("version")
+  [1m[36mSQL (0.5ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.2ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+  [1m[35mSQL (0.5ms)[0m  CREATE TABLE "workflow_processes" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.2ms)[0m  [1mCREATE INDEX "index_workflow_processes_on_name" ON "workflow_processes" ("name")[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20100507184607')
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+  [1m[36mSQL (0.5ms)[0m  [1mCREATE TABLE "workflow_process_instances" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "instance_id" integer, "instance_type" varchar(255), "process_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35mSQL (0.2ms)[0m  CREATE INDEX "index_workflow_process_instances_on_instance_id" ON "workflow_process_instances" ("instance_id")
+  [1m[36mSQL (0.2ms)[0m  [1mCREATE INDEX "index_workflow_process_instances_on_instance_type" ON "workflow_process_instances" ("instance_type")[0m
+  [1m[35mSQL (0.2ms)[0m  CREATE INDEX "index_workflow_process_instances_on_process_id" ON "workflow_process_instances" ("process_id")
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20100507184617')[0m
+Migrating to CreateWorkflowNodes (20100507184629)
+  [1m[35mSQL (0.6ms)[0m  CREATE TABLE "workflow_nodes" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "type" varchar(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.2ms)[0m  [1mCREATE INDEX "index_workflow_nodes_on_name" ON "workflow_nodes" ("name")[0m
+  [1m[35mSQL (0.2ms)[0m  CREATE INDEX "index_workflow_nodes_on_type" ON "workflow_nodes" ("type")
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20100507184629')[0m
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[35mSQL (0.5ms)[0m  CREATE TABLE "workflow_transitions" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "from_node_id" integer, "to_node_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.2ms)[0m  [1mCREATE INDEX "index_workflow_transitions_on_name" ON "workflow_transitions" ("name")[0m
+  [1m[35mSQL (0.2ms)[0m  CREATE INDEX "index_workflow_transitions_on_from_node_id" ON "workflow_transitions" ("from_node_id")
+  [1m[36mSQL (0.2ms)[0m  [1mCREATE INDEX "index_workflow_transitions_on_to_node_id" ON "workflow_transitions" ("to_node_id")[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20100507184641')
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (1.3ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.4ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.3ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.2ms)[0m  select sqlite_version(*)
+  [1m[36mSQL (3.2ms)[0m  [1mCREATE TABLE "schema_migrations" ("version" varchar(255) NOT NULL) [0m
+  [1m[35mSQL (2.2ms)[0m  CREATE UNIQUE INDEX "unique_schema_migrations" ON "schema_migrations" ("version")
+  [1m[36mSQL (0.3ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.2ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.1ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+  [1m[35mSQL (0.5ms)[0m  CREATE TABLE "workflow_processes" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.2ms)[0m  [1mCREATE INDEX "index_workflow_processes_on_name" ON "workflow_processes" ("name")[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20100507184607')
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+  [1m[36mSQL (0.5ms)[0m  [1mCREATE TABLE "workflow_process_instances" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "instance_id" integer, "instance_type" varchar(255), "process_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35mSQL (0.2ms)[0m  CREATE INDEX "index_workflow_process_instances_on_instance_id" ON "workflow_process_instances" ("instance_id")
+  [1m[36mSQL (0.2ms)[0m  [1mCREATE INDEX "index_workflow_process_instances_on_instance_type" ON "workflow_process_instances" ("instance_type")[0m
+  [1m[35mSQL (0.2ms)[0m  CREATE INDEX "index_workflow_process_instances_on_process_id" ON "workflow_process_instances" ("process_id")
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20100507184617')[0m
+Migrating to CreateWorkflowNodes (20100507184629)
+  [1m[35mSQL (0.5ms)[0m  CREATE TABLE "workflow_nodes" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "type" varchar(255), "process_id" integer, "created_at" datetime, "updated_at" datetime) 
+  [1m[36mSQL (0.2ms)[0m  [1mCREATE INDEX "index_workflow_nodes_on_name" ON "workflow_nodes" ("name")[0m
+  [1m[35mSQL (0.2ms)[0m  CREATE INDEX "index_workflow_nodes_on_type" ON "workflow_nodes" ("type")
+  [1m[36mSQL (0.2ms)[0m  [1mCREATE INDEX "index_workflow_nodes_on_process_id" ON "workflow_nodes" ("process_id")[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ('20100507184629')
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.5ms)[0m  [1mCREATE TABLE "workflow_transitions" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar(255), "from_node_id" integer, "to_node_id" integer, "created_at" datetime, "updated_at" datetime) [0m
+  [1m[35mSQL (0.2ms)[0m  CREATE INDEX "index_workflow_transitions_on_name" ON "workflow_transitions" ("name")
+  [1m[36mSQL (0.2ms)[0m  [1mCREATE INDEX "index_workflow_transitions_on_from_node_id" ON "workflow_transitions" ("from_node_id")[0m
+  [1m[35mSQL (0.2ms)[0m  CREATE INDEX "index_workflow_transitions_on_to_node_id" ON "workflow_transitions" ("to_node_id")
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ('20100507184641')[0m
+  [1m[36mSQL (0.9ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[35mSQL (0.5ms)[0m  INSERT INTO "workflow_processes" ("created_at", "name", "updated_at") VALUES ('2010-05-07 20:48:24.289398', 'Test Process 1', '2010-05-07 20:48:24.289398')
+  [1m[36mSQL (0.8ms)[0m  [1m SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+[0m
+  [1m[35mSQL (0.4ms)[0m   SELECT name
+ FROM sqlite_master
+ WHERE type = 'table' AND NOT name = 'sqlite_sequence'
+  [1m[36mSQL (0.3ms)[0m  [1mSELECT "schema_migrations"."version" FROM "schema_migrations"[0m
+Migrating to CreateWorkflowProcesses (20100507184607)
+Migrating to CreateWorkflowProcessInstances (20100507184617)
+Migrating to CreateWorkflowNodes (20100507184629)
+Migrating to CreateWorkflowTransitions (20100507184641)
+  [1m[35mSQL (0.5ms)[0m  INSERT INTO "workflow_processes" ("created_at", "name", "updated_at") VALUES ('2010-05-07 20:48:38.706595', 'Test Process 1', '2010-05-07 20:48:38.706595')
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "workflow_processes" ("created_at", "name", "updated_at") VALUES ('2010-05-07 20:48:38.747197', 'Test Process 2', '2010-05-07 20:48:38.747197')[0m
+  [1m[35mSQL (0.8ms)[0m  INSERT INTO "workflow_processes" ("created_at", "name", "updated_at") VALUES ('2010-05-07 20:48:38.783318', 'Test Process 4', '2010-05-07 20:48:38.783318')
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "workflow_nodes" ("created_at", "name", "process_id", "type", "updated_at") VALUES ('2010-05-07 20:48:38.786858', 'Test Node 2', 1, NULL, '2010-05-07 20:48:38.786858')[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "workflow_processes" ("created_at", "name", "updated_at") VALUES ('2010-05-07 20:48:38.794736', 'Test Process 5', '2010-05-07 20:48:38.794736')
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "workflow_nodes" ("created_at", "name", "process_id", "type", "updated_at") VALUES ('2010-05-07 20:48:38.797475', 'Test Node 3', 2, NULL, '2010-05-07 20:48:38.797475')[0m

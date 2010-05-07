@@ -22,6 +22,12 @@ Rspec.configure do |config|
   # methods or matchers
   require 'rspec/expectations'
   config.include Rspec::Matchers
+  require 'shoulda/active_record/matchers'
+  require 'shoulda/action_controller/matchers'
+  # require 'active_support/test_case'
+
+      config.include Shoulda::ActiveRecord::Matchers
+      config.include Shoulda::ActionController::Matchers
 
   # == Mock Framework
   config.mock_with :rspec

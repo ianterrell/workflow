@@ -3,4 +3,5 @@ class Workflow::Transition < ActiveRecord::Base
   belongs_to :to_node, :class_name => "Workflow::Node", :foreign_key => "to_node_id"
   
   validates_presence_of :name
+  validates_uniqueness_of :name, :scope => :from_node_id
 end

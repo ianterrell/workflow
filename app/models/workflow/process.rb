@@ -3,4 +3,5 @@ class Workflow::Process < ActiveRecord::Base
   has_many :nodes, :class_name => "Workflow::Node", :foreign_key => "process_id"
 
   validates_presence_of :name
+  validates_uniqueness_of :name
 end

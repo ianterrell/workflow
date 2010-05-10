@@ -20,4 +20,8 @@ describe Workflow::Transition do
     transition.from_node = Factory.create(:node)
     transition.should be_valid
   end
+  
+  it "should have a scope by name" do
+    Workflow::Transition.named(@transition.name).should include(@transition)
+  end
 end

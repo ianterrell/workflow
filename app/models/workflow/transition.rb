@@ -4,4 +4,6 @@ class Workflow::Transition < ActiveRecord::Base
   
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => :from_node_id
+  
+  scope :named, lambda { |name| where(:name => name) }
 end

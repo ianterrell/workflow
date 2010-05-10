@@ -9,12 +9,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100507184641) do
+ActiveRecord::Schema.define(:version => 20100510215355) do
+
+  create_table "test_dummies", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "workflow_nodes", :force => true do |t|
     t.string   "name"
     t.string   "type"
     t.integer  "process_id"
+    t.boolean  "start",      :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -22,6 +28,16 @@ ActiveRecord::Schema.define(:version => 20100507184641) do
   add_index "workflow_nodes", ["name"], :name => "index_workflow_nodes_on_name"
   add_index "workflow_nodes", ["process_id"], :name => "index_workflow_nodes_on_process_id"
   add_index "workflow_nodes", ["type"], :name => "index_workflow_nodes_on_type"
+
+  create_table "workflow_process_instance_nodes", :force => true do |t|
+    t.integer  "node_id"
+    t.integer  "process_instance_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "workflow_process_instance_nodes", ["node_id"], :name => "index_workflow_process_instance_nodes_on_node_id"
+  add_index "workflow_process_instance_nodes", ["process_instance_id"], :name => "index_workflow_process_instance_nodes_on_process_instance_id"
 
   create_table "workflow_process_instances", :force => true do |t|
     t.integer  "instance_id"

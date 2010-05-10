@@ -3,6 +3,7 @@ class CreateWorkflowNodes < ActiveRecord::Migration
     create_table :workflow_nodes do |t|
       t.string :name, :type
       t.references :process
+      t.boolean :start, :default => false
       t.timestamps
     end
     add_index :workflow_nodes, :name

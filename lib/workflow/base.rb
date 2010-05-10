@@ -7,20 +7,19 @@ module Workflow
     
     module ClassMethods
       def on_workflow(name)
-
         name_symbol = name.underscore.gsub(' ', '_').intern
         self.class_eval <<-RUBY
           has_many :process_instances, :class_name => "Workflow::ProcessInstance", :as => :instance
           
           def start_#{name_symbol}
-            process = Workflow::Process.find_by_name #{name.inspect}
-            process_instance = Workflow::ProcessInstance.new :process => process, :instance => self
-            process_instance.nodes << process.start_node
-            process_instance.save!
+            @#{name_symbol}_process ||= Workflow::Process.find_by_name #{name.inspect}
+            @#{name_symbol}_process_instance ||= Workflow::ProcessInstance.new :process => @#{name_symbol}_process, :instance => self
+            @#{name_symbol}_process_instance.nodes << @#{name_symbol}_process.start_node
+            @#{name_symbol}_process_instance.save!
           end
           
           def #{name_symbol}
-            process_instances.process_named(#{name.inspect}).first
+            @#{name_symbol}_process_instance ||= process_instances.process_named(#{name.inspect}).first
           end
         RUBY
       end

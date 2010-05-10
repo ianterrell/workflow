@@ -10,7 +10,7 @@ class Workflow::ProcessInstance < ActiveRecord::Base
   scope :process_named, lambda { |name| joins(:process).where('workflow_processes.name = ? ', name) }
   
   # Only worried about sequential processes for the time
-  def transition(name)
+  def transition!(name)
     name = name.to_s
     if node.transitions.named(name).empty?
       raise Workflow::NoSuchTransition
@@ -19,6 +19,7 @@ class Workflow::ProcessInstance < ActiveRecord::Base
       process_instance_node = self.process_instance_nodes.first
       process_instance_node.node = node.transitions.named(name).first.to_node
       process_instance_node.save!
+      self.reload
     end
   end
 end

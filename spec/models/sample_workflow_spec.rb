@@ -33,15 +33,13 @@ describe TestDummy do
   
   it "should be able to take a transition named by a symbol" do
     @model.start_sample_workflow
-    @model.sample_workflow.transition :go
-    @model.reload
-    @model.sample_workflow.state.should == @end_node
+    @model.sample_workflow.transition! :go
+    @model.sample_workflow.node.should == @end_node
   end
   
   it "should be able to take a transition named by a string" do
     @model.start_sample_workflow
-    @model.sample_workflow.transition "go"
-    @model.reload
+    @model.sample_workflow.transition! "go"
     @model.sample_workflow.state.should == @end_node
   end
 end

@@ -13,6 +13,8 @@ describe Workflow::Node do
   it { should belong_to(:process) }
   it { should have_many(:transitions) }
   it { should have_many(:incoming_transitions) }
+  it { should have_many(:process_instance_nodes) }
+  it { should have_many(:process_instances) }
   
   it { should validate_presence_of(:name) }
   it "should validate uniqueness of name scoped by the process" do

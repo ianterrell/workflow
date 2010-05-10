@@ -7,4 +7,7 @@ describe Workflow::ProcessInstance do
   
   it { should belong_to(:process) }
   it { should belong_to(:instance) }
+  
+  it { should have_many(:process_instance_nodes) }
+  it { should have_many(:nodes) }
 end

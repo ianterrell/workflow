@@ -1,6 +1,7 @@
 require 'workflow'
 require 'app/models/workflow/process'
 require 'app/models/workflow/process_instance'
+require 'app/models/workflow/process_instance_node'
 require 'app/models/workflow/node'
 require 'app/models/workflow/transition'
 
@@ -23,4 +24,8 @@ Factory.define :transition, :class => Workflow::Transition, :default_strategy =>
   f.association :to_node, :factory => :node
 end
 
+Factory.define :process_instance_node, :class => Workflow::ProcessInstanceNode, :default_strategy => :build do |f|
+  f.association :process_instance
+  f.association :node
+end
 

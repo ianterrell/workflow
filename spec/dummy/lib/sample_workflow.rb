@@ -21,7 +21,7 @@ class CreatePublicationProcess < Workflow::ProcessMigration
       state :approval do
         transition :reject, :to => :copyedit
         transition :approve, :to => :published
-        timer :send_reminder_email, :repeat => true,
+        timer :send_reminder_email, :repeat => true
         timer :auto_reject, :after => "10 days"
       end
 

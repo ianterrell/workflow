@@ -1,3 +1,9 @@
 class TestDummy < ActiveRecord::Base
-  on_workflow "Sample Workflow"
+  cattr_accessor :grumpy
+  
+  on_workflow "Test Workflow"
+  
+  def grumpy?
+    @@grumpy
+  end
 end

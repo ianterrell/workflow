@@ -2,6 +2,7 @@ class CreateWorkflowNodes < ActiveRecord::Migration
   def self.up
     create_table :workflow_nodes do |t|
       t.string :name, :type
+      t.text :enter_callbacks, :exit_callbacks
       t.references :process
       t.boolean :start, :default => false
       t.timestamps

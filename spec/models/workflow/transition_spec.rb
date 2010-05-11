@@ -24,4 +24,27 @@ describe Workflow::Transition do
   it "should have a scope by name" do
     Workflow::Transition.named(@transition.name).should include(@transition)
   end
+  
+  it "should know its process" do
+    @transition.process.should == @transition.from_node.process
+  end
+  
+  it "should serialize callbacks" do
+    @transition.callbacks = [:x, :y]
+    @transition.save
+    Workflow::Transition.find(@transition.id).callbacks.should == [:x, :y]
+  end
+  
+  it "should validate that callbacks are strings, symbols, or arrays of them" do
+    @transition.callbacks = :x
+    @transition.should be_valid
+    @transition.callbacks = "x"
+    @transition.should be_valid
+    @transition.callbacks = [:x, "y"]
+    @transition.should be_valid
+    @transition.callbacks = 1
+    @transition.should_not be_valid
+    @transition.callbacks = [:x, 1]
+    @transition.should_not be_valid
+  end
 end

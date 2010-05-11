@@ -1,5 +1,6 @@
 require 'workflow'
 require 'workflow/errors'
+require 'workflow/callbacks'
 require 'rails'
 
 module Workflow

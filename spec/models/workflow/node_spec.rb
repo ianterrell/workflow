@@ -24,4 +24,42 @@ describe Workflow::Node do
     node.process = Factory.create(:process)
     node.should be_valid
   end
+  
+  it "should serialize enter callbacks" do
+    @node.enter_callbacks = [:x, :y]
+    @node.save
+    Workflow::Node.find(@node.id).enter_callbacks.should == [:x, :y]
+  end
+  
+  it "should serialize exit callbacks" do
+    @node.exit_callbacks = [:x, :y]
+    @node.save
+    Workflow::Node.find(@node.id).exit_callbacks.should == [:x, :y]
+  end
+  
+  it "should validate that enter callbacks are strings, symbols, or arrays of them" do
+    @node.enter_callbacks = :x
+    @node.should be_valid
+    @node.enter_callbacks = "x"
+    @node.should be_valid
+    @node.enter_callbacks = [:x, "y"]
+    @node.should be_valid
+    @node.enter_callbacks = 1
+    @node.should_not be_valid
+    @node.enter_callbacks = [:x, 1]
+    @node.should_not be_valid
+  end
+  
+  it "should validate that exit callbacks are strings, symbols, or arrays of them" do
+    @node.exit_callbacks = :x
+    @node.should be_valid
+    @node.exit_callbacks = "x"
+    @node.should be_valid
+    @node.exit_callbacks = [:x, "y"]
+    @node.should be_valid
+    @node.exit_callbacks = 1
+    @node.should_not be_valid
+    @node.exit_callbacks = [:x, 1]
+    @node.should_not be_valid
+  end
 end

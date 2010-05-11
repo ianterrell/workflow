@@ -5,13 +5,17 @@ class Workflow::DecisionNode < Workflow::Node
   end
   
 protected 
+  def transition(process_instance)
+    process_instance.transition! transition_to_take(process_instance.instance)
+  end
+
   def transition_to_take(instance)
-    value = if instance.respond_to? name
+    value = if !custom_class.blank?
+      decide_with_class custom_class.constantize, instance
+    elsif instance.respond_to? name
       instance.send name
-    elsif class_exists?("#{name}_decision".camelize)
-      decision_instance = "#{name}_decision".camelize.constantize.new
-      raise Workflow::CustomDecisionDoesntQuack unless decision_instance.respond_to?(:transition_to_take)
-      decision_instance.transition_to_take
+    elsif decision_instance = Workflow.custom_class_exists?("#{name}_decision")
+      decide_with_class Workflow.custom_class("#{name}_decision"), instance
     else
       raise Workflow::NoWayToMakeDecision
     end
@@ -24,17 +28,10 @@ protected
       value
     end
   end
-
-  def transition(process_instance)
-    process_instance.transition! transition_to_take(process_instance.instance)
-  end
   
-  def class_exists?(clazz_string)
-    begin
-      clazz_string.constantize
-      true
-    rescue
-      false
-    end
+  def decide_with_class(clazz, model_instance)
+    decision_instance = clazz.new model_instance
+    raise Workflow::CustomDecisionDoesntQuack unless decision_instance.respond_to?(:transition_to_take)
+    decision_instance.transition_to_take
   end
 end

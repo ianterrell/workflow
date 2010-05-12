@@ -14,7 +14,7 @@ protected
       decide_with_class custom_class.constantize, instance
     elsif instance.respond_to? name
       instance.send name
-    elsif decision_instance = Workflow.custom_class_exists?("#{name}_decision")
+    elsif Workflow.custom_class_exists?("#{name}_decision")
       decide_with_class Workflow.custom_class("#{name}_decision"), instance
     else
       raise Workflow::NoWayToMakeDecision

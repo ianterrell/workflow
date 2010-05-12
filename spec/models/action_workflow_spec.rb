@@ -4,9 +4,9 @@ def create_simple_action_workflow(options={})
   @process = Factory.create :process, :name => "Test Workflow"
   @start_node = Factory.create :node, :process => @process, :name => "Start", :start => true
   if options[:custom_class]
-    @action_node = Factory.create :action_node, :process => @process, :name => "bar", :custom_class => options[:custom_class]
+    @action_node = Factory.create :action_node, :process => @process, :name => options[:name], :custom_class => options[:custom_class]
   else
-    @action_node = Factory.create :action_node, :process => @process, :name => "bar"
+    @action_node = Factory.create :action_node, :process => @process, :name => options[:name]
   end
   @transition = Factory.create :transition, :name => "go", :from_node => @start_node, :to_node => @action_node
   @end_node = Factory.create :node, :process => @process, :name => "End"
@@ -21,7 +21,7 @@ end
 
 describe "A simple workflow with an action node" do
   before do
-    create_simple_action_workflow
+    create_simple_action_workflow :name => "bar"
   end
   
   it "should create an action on entry" do
@@ -47,30 +47,64 @@ describe "A simple workflow with an action node" do
     @model.reload.test_workflow.node.should == @end_node
   end
 end
-# 
-# describe "A simple workflow with an action node using a custom action class" do
-#   before do
-#     create_simple_action_workflow :custom_class => "TestAction"
-#   end
-#   
-#   it "should create a custom action instance on entry" do
-#     TestAction.count.should == 0
-#     perform_action_workflow
-#     @model.test_workflow.node.should == @action_node
-#     TestAction.count.should == 1
-#   end
-# end
-# 
-# describe "A simple workflow with an action node using a bad custom action class" do
-#   before do
-#     create_simple_action_workflow :custom_class => "NonexistentTestAction"
-#   end
-#   
-#   it "should fail with an error" do
-#     begin
-#       perform_action_workflow
-#       fail
-#     rescue Workflow::BadActionClass
-#     end
-#   end
-# end
+
+describe "A simple workflow with an action node using a custom action class" do
+  before do
+    create_simple_action_workflow :name => "bar", :custom_class => "TestAction"
+  end
+  
+  it "should create a custom action instance on entry" do
+    TestAction.count.should == 0
+    perform_action_workflow
+    TestAction.count.should == 1
+  end
+  
+  it "should perform the custom action's perform method" do
+    TestAction.perform_count = 0
+    perform_action_workflow
+    TestAction.perform_count.should == 1
+  end
+end
+
+describe "A simple workflow with an action node using a nonexistent custom action class" do
+  before do
+    create_simple_action_workflow :name => "bar", :custom_class => "NonexistentTestAction"
+  end
+  
+  it "should fail with an error" do
+    begin
+      perform_action_workflow
+      fail
+    rescue 
+    end
+  end
+end
+
+
+describe "A simple workflow with an action node without any action to perform" do
+  before do
+    create_simple_action_workflow :name => "nonexistent_action"
+  end
+  
+  it "should fail with an error" do
+    begin
+      perform_action_workflow
+      fail
+    rescue Workflow::NoWayToPerformAction
+    end
+  end
+end
+
+describe "A simple workflow with an action node using a nonquacking custom action class" do
+  before do
+    create_simple_action_workflow :name => "bar", :custom_class => "BadTestAction"
+  end
+  
+  it "should fail with an error" do
+    begin
+      perform_action_workflow
+      fail
+    rescue Workflow::CustomActionDoesntQuack
+    end
+  end
+end

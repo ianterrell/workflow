@@ -17,6 +17,7 @@ describe "A simple workflow with callbacks" do
   end
   
   it "should call enter callbacks defined on entering node" do
+    # Can't do should_receive because it uses a different object in memory
     TestDummy.bar_called = 0
     perform_workflow @model
     TestDummy.bar_called.should == 1

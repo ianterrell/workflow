@@ -8,6 +8,11 @@ class Workflow::TaskNode < Workflow::Node
   
 protected
   def create_task(process_instance)
-    tasks.create :process_instance => process_instance, :assigned_to => assign_to
+    clazz = if custom_class.blank?
+      Workflow::Task
+    else
+      custom_class.constantize rescue raise Workflow::BadTaskClass
+    end
+    clazz.create :node => self, :process_instance => process_instance, :assigned_to => assign_to
   end
 end

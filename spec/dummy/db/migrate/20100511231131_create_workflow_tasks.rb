@@ -2,7 +2,7 @@ class CreateWorkflowTasks < ActiveRecord::Migration
   def self.up
     create_table :workflow_tasks do |t|
       t.references :node, :process_instance
-      t.string :assigned_to
+      t.string :assigned_to, :type
       t.datetime :completed_at
       t.timestamps
     end

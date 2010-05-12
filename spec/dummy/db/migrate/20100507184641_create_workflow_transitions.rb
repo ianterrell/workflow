@@ -2,7 +2,7 @@ class CreateWorkflowTransitions < ActiveRecord::Migration
   def self.up
     create_table :workflow_transitions do |t|
       t.string :name
-      t.text :callbacks
+      t.text :callbacks, :guards
       t.references :from_node
       t.references :to_node
       t.timestamps

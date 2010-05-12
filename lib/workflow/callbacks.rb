@@ -32,13 +32,7 @@ module Workflow
       def execute_callback_type_on_instance(callback_type, instance)
         callbacks = self.send callback_type
         return if callbacks.nil?
-        if callbacks.is_a? Array
-          callbacks.each do |callback|
-            execute_callback_on_instance callback, instance
-          end
-        else
-          execute_callback_on_instance callbacks, instance
-        end
+        (callbacks.is_a?(Array) ? callbacks : [callbacks]).each { |callback| execute_callback_on_instance(callback, instance) }
       end
 
       def execute_callback_on_instance(callback, instance)
@@ -51,11 +45,7 @@ module Workflow
 
       def validate_callbacks(callback_type)
         callbacks = self.send(callback_type)
-        valid = if callbacks.is_a? Array
-          callbacks.all? { |c| callback_is_valid?(c) }
-        else
-          callback_is_valid?(callbacks)
-        end
+        valid = (callbacks.is_a?(Array) ? callbacks : [callbacks]).all? { |c| callback_is_valid?(c) }
         self.errors.add(callback_type, "must be nil, symbols, strings, or arrays of them") unless valid
       end
 

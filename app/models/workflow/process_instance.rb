@@ -19,12 +19,10 @@ class Workflow::ProcessInstance < ActiveRecord::Base
     raise Workflow::NoSuchTransition if transitions.empty?
 
     transition_to_take = transitions.first
+    return false unless transition_to_take.guards_pass?(instance)
+    
     new_node = transition_to_take.to_node      
-    
     process_instance_node = self.process_instance_nodes.first
-    
-    # TODO: return here unless all guards pass
-    
     node.execute_exit_callbacks self
     transition_to_take.execute_callbacks self
     process_instance_node.node = new_node

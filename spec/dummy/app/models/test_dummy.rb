@@ -12,4 +12,8 @@ class TestDummy < ActiveRecord::Base
     @@bar_called ||= 0
     @@bar_called += 1
   end
+  
+  def always_true?
+    true
+  end
 end

@@ -27,6 +27,11 @@ describe "A simple workflow with callbacks" do
     perform_workflow @model
   end
   
+  it "should warn the user for nonexistent callbacks" do
+    Rails.logger.should_receive(:warn).at_least(:once)
+    perform_workflow @model
+  end
+  
   def perform_workflow(model)
     model.start_test_workflow
     model.test_workflow.transition! :go

@@ -47,4 +47,29 @@ describe Workflow::Transition do
     @transition.callbacks = [:x, 1]
     @transition.should_not be_valid
   end
+  
+  it "should serialize guards" do
+    @transition.guards = [:x?, :y?]
+    @transition.save
+    Workflow::Transition.find(@transition.id).guards.should == [:x?, :y?]
+  end
+  
+  it "should validate that guards are strings, symbols, or arrays of them, all ending in ?" do
+    @transition.guards = :x?
+    @transition.should be_valid
+    @transition.guards = "x?"
+    @transition.should be_valid
+    @transition.guards = [:x?, "y?"]
+    @transition.should be_valid
+    @transition.guards = 1
+    @transition.should_not be_valid
+    @transition.guards = [:x?, 1]
+    @transition.should_not be_valid
+    @transition.guards = :x
+    @transition.should_not be_valid
+    @transition.guards = "x"
+    @transition.should_not be_valid
+    @transition.guards = [:x, "y?"]
+    @transition.should_not be_valid
+  end
 end

@@ -28,7 +28,7 @@ describe "A simple workflow with callbacks" do
   end
   
   it "should warn the user for nonexistent callbacks" do
-    Rails.logger.should_receive(:warn).at_least(:once)
+    Rails.logger.should_receive(:warn).exactly(3).times #foo, fooz, baz
     perform_workflow @model
   end
   

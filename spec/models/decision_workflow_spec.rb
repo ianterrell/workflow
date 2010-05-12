@@ -16,9 +16,9 @@ def create_simple_decision_workflow(decision_name, yes_transition, no_transition
   @model = TestDummy.new
 end
 
-def perform_workflow(model)
-  model.start_test_workflow
-  model.test_workflow.transition! :go
+def perform_decision_workflow
+  @model.start_test_workflow
+  @model.test_workflow.transition! :go
 end
 
 describe "A simple workflow with a decision node with yes/no" do
@@ -28,13 +28,13 @@ describe "A simple workflow with a decision node with yes/no" do
   
   it "should take the 'yes' transition if true" do
     TestDummy.grumpy = true
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @yes_node
   end
   
   it "should take the 'no' transition if false" do
     TestDummy.grumpy = false
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @no_node
   end
 end
@@ -46,13 +46,13 @@ describe "A simple workflow with a decision node with true/false" do
   
   it "should take the 'true' transition if true" do
     TestDummy.grumpy = true
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @yes_node
   end
   
   it "should take the 'false' transition if false" do
     TestDummy.grumpy = false
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @no_node
   end
 end
@@ -64,13 +64,13 @@ describe "A simple workflow with a decision node with foo/bar symbols" do
   
   it "should take the 'foo' transition if foo" do
     TestDummy.grumpy = :foo
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @yes_node
   end
   
   it "should take the 'bar' transition if bar" do
     TestDummy.grumpy = :bar
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @no_node
   end
 end
@@ -83,13 +83,13 @@ describe "A simple workflow with a decision node with foo/bar strings" do
   
   it "should take the 'foo' transition if foo" do
     TestDummy.grumpy = "foo"
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @yes_node
   end
   
   it "should take the 'bar' transition if bar" do
     TestDummy.grumpy = "bar"
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @no_node
   end
 end
@@ -101,13 +101,13 @@ describe "A simple workflow with a decision node using a class to decide with ye
   
   it "should take the 'yes' transition if true" do
     TestDecision.value = true
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @yes_node
   end
   
   it "should take the 'no' transition if false" do
     TestDecision.value = false
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @no_node
   end
 end
@@ -119,13 +119,13 @@ describe "A simple workflow with a decision node using a class to decide with tr
   
   it "should take the 'true' transition if true" do
     TestDecision.value = true
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @yes_node
   end
   
   it "should take the 'false' transition if false" do
     TestDecision.value = false
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @no_node
   end
 end
@@ -137,13 +137,13 @@ describe "A simple workflow with a decision node using a class to decide with fo
   
   it "should take the 'foo' transition if foo" do
     TestDecision.value = :foo
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @yes_node
   end
   
   it "should take the 'bar' transition if bar" do
     TestDecision.value = :bar
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @no_node
   end
 end
@@ -156,13 +156,13 @@ describe "A simple workflow with a decision node using a class to decide with fo
   
   it "should take the 'foo' transition if foo" do
     TestDecision.value = "foo"
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @yes_node
   end
   
   it "should take the 'bar' transition if bar" do
     TestDecision.value = "bar"
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @no_node
   end
 end
@@ -175,13 +175,13 @@ describe "A simple workflow with a decision node using a custom class to decide 
   
   it "should take the 'yes' transition if true" do
     TestDecision.value = true
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @yes_node
   end
   
   it "should take the 'no' transition if false" do
     TestDecision.value = false
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @no_node
   end
 end
@@ -193,13 +193,13 @@ describe "A simple workflow with a decision node using a custom class to decide 
   
   it "should take the 'true' transition if true" do
     TestDecision.value = true
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @yes_node
   end
   
   it "should take the 'false' transition if false" do
     TestDecision.value = false
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @no_node
   end
 end
@@ -211,13 +211,13 @@ describe "A simple workflow with a decision node using a custom class to decide 
   
   it "should take the 'foo' transition if foo" do
     TestDecision.value = :foo
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @yes_node
   end
   
   it "should take the 'bar' transition if bar" do
     TestDecision.value = :bar
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @no_node
   end
 end
@@ -230,13 +230,13 @@ describe "A simple workflow with a decision node using a custom class to decide 
   
   it "should take the 'foo' transition if foo" do
     TestDecision.value = "foo"
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @yes_node
   end
   
   it "should take the 'bar' transition if bar" do
     TestDecision.value = "bar"
-    perform_workflow @model
+    perform_decision_workflow
     @model.test_workflow.node.should == @no_node
   end
 end
@@ -251,7 +251,7 @@ describe "A simple workflow with a nonexistent decision method or class" do
   
   it "should fail with an error" do
     begin
-      perform_workflow @model
+      perform_decision_workflow
       fail
     rescue Workflow::NoWayToMakeDecision
     end
@@ -265,7 +265,7 @@ describe "A simple workflow with a bad custom decision class" do
   
   it "should fail with an error" do
     begin
-      perform_workflow @model
+      perform_decision_workflow
       fail
     rescue Workflow::CustomDecisionDoesntQuack
     end

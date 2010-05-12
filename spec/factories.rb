@@ -4,7 +4,12 @@ require 'app/models/workflow/process_instance'
 require 'app/models/workflow/process_instance_node'
 require 'app/models/workflow/node'
 require 'app/models/workflow/decision_node'
+require 'app/models/workflow/task_node'
 require 'app/models/workflow/transition'
+require 'app/models/workflow/task'
+
+# Huh.  Just realized that some of these factories contain inconsistent data -- like
+# a transition transitioning between processes.  This needs a bit of work.
 
 Factory.define :process, :class => Workflow::Process, :default_strategy => :build do |f|
   f.sequence(:name) { |n| "Test Process #{n}" }
@@ -24,6 +29,11 @@ Factory.define :decision_node, :class => Workflow::DecisionNode, :default_strate
   f.association :process
 end
 
+Factory.define :task_node, :class => Workflow::TaskNode, :default_strategy => :build do |f|
+  f.sequence(:name) { |n| "Task Node #{n}" }
+  f.association :process
+end
+
 Factory.define :transition, :class => Workflow::Transition, :default_strategy => :build do |f|
   f.sequence(:name) { |n| "Test Transition #{n}" }
   f.association :from_node, :factory => :node
@@ -35,3 +45,7 @@ Factory.define :process_instance_node, :class => Workflow::ProcessInstanceNode, 
   f.association :node
 end
 
+Factory.define :task, :class => Workflow::Task, :default_strategy => :build do |f|
+  f.association :node, :factory => :task_node
+  f.association :process_instance
+end

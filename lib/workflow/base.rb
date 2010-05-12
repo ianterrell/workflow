@@ -26,9 +26,7 @@ module Workflow
     end
     
     module InstanceMethods
-      def start_workflow(name)
-        
-      end
+
     end
   end
 end

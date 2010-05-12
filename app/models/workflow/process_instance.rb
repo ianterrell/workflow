@@ -32,5 +32,6 @@ class Workflow::ProcessInstance < ActiveRecord::Base
     self.reload
     new_node.execute_enter_callbacks self
 
+    new_node
   end
 end

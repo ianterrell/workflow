@@ -42,4 +42,10 @@ describe "A simple two state workflow" do
     @model.test_workflow.transition! "go"
     @model.test_workflow.state.should == @end_node
   end
+  
+  it "should return the new node on a successful transition" do
+    @model.start_test_workflow
+    new_node = @model.test_workflow.transition! "go"
+    new_node.should == @end_node
+  end
 end

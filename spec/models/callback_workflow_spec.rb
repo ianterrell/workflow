@@ -17,11 +17,9 @@ describe "A simple workflow with callbacks" do
   end
   
   it "should call enter callbacks defined on entering node" do
-    # This is getting called, but the process instance is reloaded before,
-    # so this expectation fails.  I'm not sure off the top of my head how 
-    # to spec this out.
-    # @model.should_receive(:bar)
+    TestDummy.bar_called = 0
     perform_workflow @model
+    TestDummy.bar_called.should == 1
   end
   
   it "should call callbacks defined on transition" do

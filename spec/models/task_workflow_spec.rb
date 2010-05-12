@@ -1,3 +1,5 @@
+require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
+
 def create_simple_task_workflow(options={})
   @process = Factory.create :process, :name => "Test Workflow"
   @start_node = Factory.create :node, :process => @process, :name => "Start", :start => true

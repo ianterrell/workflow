@@ -5,6 +5,7 @@ require 'app/models/workflow/process_instance_node'
 require 'app/models/workflow/node'
 require 'app/models/workflow/decision_node'
 require 'app/models/workflow/task_node'
+require 'app/models/workflow/action_node'
 require 'app/models/workflow/transition'
 require 'app/models/workflow/task'
 
@@ -31,6 +32,11 @@ end
 
 Factory.define :task_node, :class => Workflow::TaskNode, :default_strategy => :build do |f|
   f.sequence(:name) { |n| "Task Node #{n}" }
+  f.association :process
+end
+
+Factory.define :action_node, :class => Workflow::ActionNode, :default_strategy => :build do |f|
+  f.sequence(:name) { |n| "Action Node #{n}" }
   f.association :process
 end
 

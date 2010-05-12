@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), '..', '..', 'spec_helper.rb')
+require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 
 # TODO:  Currently rescuing the complete! method because the data tier that is created
 # with the factories is not in a perfect state.  This could be fixed, although right now

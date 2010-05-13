@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 describe Workflow::ScheduledActionGenerator do
   before do
     @process_instance = Factory.create :process_instance
-    @generator = Factory.create :scheduled_action_generator, :interval => 1.second
+    @generator = Factory.create :scheduled_action_generator, :interval => 1.second, :transition => "foo"
   end
   
   it { should belong_to(:node) }

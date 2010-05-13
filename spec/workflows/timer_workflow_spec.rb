@@ -1,24 +1,6 @@
-# Things to spec:
-
-# state :approval do
-#   transition :approved, :to => :published
-#   transition :rejected, :to => :start
-#   timer :take_transition => :rejected, :after => 3.days
-#   timer :perform => :callback, :after => 5.minutes
-# end
-# 
-# wait_state :holding_pattern, :transition_to => :xyz, :after => 5.days
-# 
-# state :holding_pattern do
-#   transition :name, :to => :xyz
-#   timer :transition => :name, :after => 5.days
-# end
-
-# Timer to perform an action via a custom class, & repeatedly, & up to X times
-
-# Subclass timer generator class
-
 require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
+
+# TODO:  allow subclass of timer generator?
 
 def create_simple_timer_workflow(options={})
   options.reverse_merge!({ :interval => 1.second })
@@ -33,6 +15,10 @@ def create_simple_timer_workflow(options={})
     else
       @timer_generator = Factory.create :scheduled_action_generator, :node => @timer_node, :interval => options[:interval], :action => "bar", :repeat => true
     end
+  elsif options[:action]
+    @timer_generator = Factory.create :scheduled_action_generator, :node => @timer_node, :interval => options[:interval], :action => options[:action]
+  elsif options[:custom_class]
+    @timer_generator = Factory.create :scheduled_action_generator, :node => @timer_node, :interval => options[:interval], :action => "fake", :custom_class => options[:custom_class]
   else
     @timer_generator = Factory.create :scheduled_action_generator, :node => @timer_node, :interval => options[:interval], :action => "bar"
   end
@@ -144,6 +130,44 @@ describe "A simple workflow with a timer action that repeats" do
     Workflow::ScheduledAction.count.should == 4
     TestDummy.bar_called.should == 3
     Delayed::Job.count.should == 1
+  end
+end
+
+describe "A simple workflow with an action node using an inferred action class" do
+  before do
+    create_simple_timer_workflow :action => "timer_test"
+  end
+  
+  it "should create a custom action instance on generation" do
+    TimerTestAction.count.should == 0
+    perform_timer_workflow
+    TimerTestAction.count.should == 1
+  end
+  
+  it "should perform the custom action's perform method" do
+    TimerTestAction.perform_count = 0
+    perform_timer_workflow
+    @worker.run(Delayed::Job.first)
+    TimerTestAction.perform_count.should == 1
+  end
+end
+
+describe "A simple workflow with an action node using a custom action class" do
+  before do
+    create_simple_timer_workflow :custom_class => "TimerTestAction"
+  end
+  
+  it "should create a custom action instance on generation" do
+    TimerTestAction.count.should == 0
+    perform_timer_workflow
+    TimerTestAction.count.should == 1
+  end
+  
+  it "should perform the custom action's perform method" do
+    TimerTestAction.perform_count = 0
+    perform_timer_workflow
+    @worker.run(Delayed::Job.first)
+    TimerTestAction.perform_count.should == 1
   end
 end
 

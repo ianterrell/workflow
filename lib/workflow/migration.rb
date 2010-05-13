@@ -56,7 +56,6 @@ module Workflow
       end
       
       def timer(options)
-        # TODO:  raise something if no take_transition or no perform?
         attributes = {}
         attributes[:interval] = options[:after] if options[:after]
         if options[:every]

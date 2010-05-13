@@ -10,10 +10,12 @@ module Workflow
       end
     
       def create_process(name)
+        @node_blocks = {}
         Workflow::Process.transaction do
           @process = Workflow::Process.create! :name => name
           yield if block_given?
-          raise ProcessMustHaveStartState if @process.start_node.nil?
+          @node_blocks.each_pair { |node, block| @node = node; block.call }
+          raise ProcessMustHaveStartState if @process.reload.start_node.nil?
         end
       end
       
@@ -21,10 +23,63 @@ module Workflow
         Workflow::Process.find_by_name(name).destroy
       end
       
-      def state(name, options={})
-        raise StateMustBeWithinProcess unless @process
-        @node = @process.nodes.create! :name => name.to_s, :start => options[:start_state]
-        
+      def state(name, options={}, &block)
+        create_node Workflow::Node, name, options, &block
+      end
+      
+      def decision(name, options={}, &block)
+        create_node Workflow::DecisionNode, name, options, &block
+      end
+
+      def task(name, options={}, &block)
+        create_node Workflow::TaskNode, name, options, &block
+      end
+
+      def action(name, options={}, &block)
+        create_node Workflow::ActionNode, name, options, &block
+      end
+      
+      def wait_state(name, options)
+        raise WaitStateNeedsTransitionTo.new("The wait state '#{name}' in the process '#{@process.name}' needs to specify a node to transition to with :transition_to.") unless options[:transition_to]
+        raise WaitStateNeedsInterval.new("The wait state '#{name}' in the process '#{@process.name}' needs to specify an interval to wait with :after.") unless options[:after]
+        state name do
+          transition :continue, :to => options[:transition_to]
+          timer :take_transition => :continue, :after => options[:after]
+        end
+      end
+      
+      def transition(name, options)
+        raise TransitionMustGoSomewhere.new("The transition '#{name}' in the node '#{@node.name}' must have a :to option specifying where it goes.") unless options[:to]
+        raise NodeDoesNotExist.new("The node '#{options[:to]}' referenced in the transition '#{name}' in the node '#{@node.name}' does not exist in the process '#{@node.process.name}'.") unless (to_node = @process.nodes(true).named(options[:to].to_s).first)
+
+        @node.transitions.create! :name => name.to_s, :to_node => to_node, :callbacks => options[:on_transition]
+      end
+      
+      def timer(options)
+        # TODO:  raise something if no take_transition or no perform?
+        attributes = {}
+        attributes[:interval] = options[:after] if options[:after]
+        if options[:every]
+          attributes[:interval] = options[:every] 
+          attributes[:repeat] = true
+          if options[:up_to]
+            raise TimerRepeatCountMustBeEnumerator.new("A timer in the node '#{@node.name}' specified a repeat count without using an enumerator (use 3.times rather than 3).") unless options[:up_to].is_a?(Enumerable::Enumerator)
+            attributes[:repeat_count] = options[:up_to].try(:max).try(:+, 1)
+          end
+        end
+        attributes[:transition] = options[:take_transition].to_s if options[:take_transition]
+        attributes[:action] = options[:perform].to_s if options[:perform]
+        raise TimerNeedsInterval.new("A timer in the node '#{@node.name}' needs an interval, specify with either :after or :every.") unless attributes[:interval]
+        raise TimerNeedsActionOrTransition.new("A timer in the node '#{@node.name}' needs either an action to perform (use :perform) or a transition to take (use :take_transition).") unless attributes[:action] || attributes[:transition]
+        raise TimerNeedsExactlyOneActionOrTransition.new("A timer in the node '#{@node.name}' is trying to specify an action and a transition -- it can only do exactly one.") if attributes[:action] && attributes[:transition]
+        @node.scheduled_action_generators.create! attributes
+      end
+      
+      # This is not meant to be called directly, although if you want, you can!
+      def create_node(clazz, name, options={}, &block)
+        raise NodeMustBeWithinProcess.new("The node '#{name}' must be defined within a process.") unless @process
+        node = clazz.create! :process => @process.reload, :name => name.to_s, :start => options[:start_state], :enter_callbacks => options[:enter], :exit_callbacks => options[:exit], :custom_class => options[:class_name], :assign_to => options[:assign_to]
+        @node_blocks[node] = block if block_given?
       end
     end
     
@@ -32,6 +87,14 @@ module Workflow
     class UpNotDefined < Error; end
     class DownNotDefined < Error; end
     class ProcessMustHaveStartState < Error; end
-    class StateMustBeWithinProcess < Error; end
+    class NodeMustBeWithinProcess < Error; end
+    class TransitionMustGoSomewhere < Error; end
+    class NodeDoesNotExist < Error; end
+    class TimerNeedsInterval < Error; end
+    class TimerNeedsActionOrTransition < Error; end
+    class TimerNeedsExactlyOneActionOrTransition < Error; end
+    class TimerRepeatCountMustBeEnumerator < Error; end
+    class WaitStateNeedsTransitionTo < Error; end
+    class WaitStateNeedsInterval < Error; end
   end
 end

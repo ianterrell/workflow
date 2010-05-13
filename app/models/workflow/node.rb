@@ -18,6 +18,8 @@ class Workflow::Node < ActiveRecord::Base
   
   has_callbacks :enter, :exit
   
+  scope :named, lambda { |name| where(:name => name) }
+  
   def schedule_actions(process_instance)
     self.scheduled_action_generators.each do |generator|
       generator.generate process_instance

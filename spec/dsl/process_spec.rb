@@ -86,3 +86,23 @@ describe "Creating a process without any state" do
     end 
   end
 end
+
+describe "Creating a process without a name" do
+  before do
+    class CreateProcessMigration < Workflow::Migration
+      def self.up
+        create_process do
+          state :start, :start_state => true
+        end
+      end
+    end
+  end
+  
+  it "should raise an exception" do
+    begin
+      CreateProcessMigration.up
+      fail
+    rescue
+    end 
+  end
+end

@@ -111,4 +111,8 @@ describe Workflow::Node do
     @node.destroy
     Workflow::ProcessInstanceNode.count.should == 0
   end
+  
+  it "should have a scope by name" do
+    Workflow::Node.named(@node.name).should include(@node)
+  end
 end

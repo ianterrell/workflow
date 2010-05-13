@@ -14,8 +14,6 @@
 #   timer :transition => :name, :after => 5.days
 # end
 
-# Timer to perform an action on the model repeatedly
-# Timer to perform an action on the model repeatedly up to X times
 # Timer to perform an action via a custom class, & repeatedly, & up to X times
 
 # Subclass timer generator class
@@ -29,6 +27,12 @@ def create_simple_timer_workflow(options={})
   @timer_node = Factory.create :node, :process => @process, :name => "Timer Node"
   if options[:transition]
     @timer_generator = Factory.create :scheduled_action_generator, :node => @timer_node, :interval => options[:interval], :transition => options[:transition]
+  elsif options[:repeat]
+    if options[:up_to]
+      @timer_generator = Factory.create :scheduled_action_generator, :node => @timer_node, :interval => options[:interval], :action => "bar", :repeat => true, :repeat_count => (options[:up_to].max+1)
+    else
+      @timer_generator = Factory.create :scheduled_action_generator, :node => @timer_node, :interval => options[:interval], :action => "bar", :repeat => true
+    end
   else
     @timer_generator = Factory.create :scheduled_action_generator, :node => @timer_node, :interval => options[:interval], :action => "bar"
   end
@@ -112,6 +116,56 @@ describe "A simple workflow with a timer action" do
     @model.test_workflow.transition! :finish
     Workflow::ScheduledAction.last.should be_canceled
     TestDummy.bar_called.should == 0
+    Delayed::Job.count.should == 0
+  end
+end
+
+describe "A simple workflow with a timer action that repeats" do
+  before do
+    create_simple_timer_workflow :repeat => true
+  end
+  
+  it "should perform the action on the model repeatedly" do
+    Workflow::ScheduledAction.count.should == 0
+    TestDummy.bar_called = 0
+    perform_timer_workflow
+    Workflow::ScheduledAction.count.should == 1
+    Delayed::Job.count.should == 1
+    TestDummy.bar_called.should == 0    
+    @worker.run(Delayed::Job.first)
+    TestDummy.bar_called.should == 1
+    Workflow::ScheduledAction.count.should == 2
+    Delayed::Job.count.should == 1    
+    @worker.run(Delayed::Job.first)
+    Workflow::ScheduledAction.count.should == 3
+    TestDummy.bar_called.should == 2
+    Delayed::Job.count.should == 1
+    @worker.run(Delayed::Job.first)
+    Workflow::ScheduledAction.count.should == 4
+    TestDummy.bar_called.should == 3
+    Delayed::Job.count.should == 1
+  end
+end
+
+describe "A simple workflow with a timer action that repeats 2 times" do
+  before do
+    create_simple_timer_workflow :repeat => true, :up_to => 2.times
+  end
+  
+  it "should perform the action on the model 2 times" do
+    Workflow::ScheduledAction.count.should == 0
+    TestDummy.bar_called = 0
+    perform_timer_workflow
+    Workflow::ScheduledAction.count.should == 1
+    Delayed::Job.count.should == 1
+    TestDummy.bar_called.should == 0    
+    @worker.run(Delayed::Job.first)
+    TestDummy.bar_called.should == 1
+    Workflow::ScheduledAction.count.should == 2
+    Delayed::Job.count.should == 1    
+    @worker.run(Delayed::Job.first)
+    Workflow::ScheduledAction.count.should == 2
+    TestDummy.bar_called.should == 2
     Delayed::Job.count.should == 0
   end
 end

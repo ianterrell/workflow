@@ -5,11 +5,11 @@ class Workflow::ScheduledAction < Workflow::Action
   validates_presence_of :scheduled_for
   
   def perform
-    if generator.transition.blank?
-      process_instance.instance.send generator.action
-    else
-      process_instance.transition! generator.transition
-    end
+    # Transitions are a special case.  No repeating or doing anything crazy here.
+    return process_instance.transition! generator.transition unless generator.transition.blank?
+    
+    process_instance.instance.send generator.action
+    schedule_repeat
   end
   
   def scheduled?
@@ -31,5 +31,13 @@ protected
   def create_delayed_job
     job = Delayed::Job.enqueue self, 0, scheduled_for
     self.update_attribute :delayed_job_id, job.id
+  end
+  
+  def schedule_repeat
+    if generator.repeat?
+      unless generator.repeat_count && Workflow::ScheduledAction.where(:generator_id => generator.id).where(:process_instance_id => process_instance.id).count >= generator.repeat_count
+        generator.generate process_instance
+      end
+    end
   end
 end

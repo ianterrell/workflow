@@ -5,7 +5,7 @@ class Workflow::ScheduledActionGenerator < ActiveRecord::Base
   def generate(process_instance)
     clazz = if !custom_class.blank?
       custom_class.constantize
-    elsif transition || (action && process_instance.instance.respond_to?(action)
+    elsif transition || (action && process_instance.instance.respond_to?(action))
       Workflow::ScheduledAction
     elsif Workflow.custom_class_exists?("#{action}_action")
       Workflow.custom_class("#{action}_action")

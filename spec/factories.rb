@@ -8,6 +8,9 @@ require 'app/models/workflow/task_node'
 require 'app/models/workflow/action_node'
 require 'app/models/workflow/transition'
 require 'app/models/workflow/task'
+require 'app/models/workflow/action'
+require 'app/models/workflow/scheduled_action'
+require 'app/models/workflow/scheduled_action_generator'
 
 # Huh.  Just realized that some of these factories contain inconsistent data -- like
 # a transition transitioning between processes.  This needs a bit of work.
@@ -54,4 +57,14 @@ end
 Factory.define :task, :class => Workflow::Task, :default_strategy => :build do |f|
   f.association :node, :factory => :task_node
   f.association :process_instance
+end
+
+Factory.define :scheduled_action_generator, :class => Workflow::ScheduledActionGenerator, :default_strategy => :build do |f|
+  f.association :node
+end
+
+Factory.define :scheduled_action, :class => Workflow::ScheduledAction, :default_strategy => :build do |f|
+  f.association :node, :factory => :task_node
+  f.association :process_instance
+  f.scheduled_for Time.now + 5.minutes
 end

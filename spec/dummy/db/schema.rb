@@ -9,7 +9,20 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100510215355) do
+ActiveRecord::Schema.define(:version => 20100512233128) do
+
+  create_table "delayed_jobs", :force => true do |t|
+    t.integer  "priority",   :default => 0
+    t.integer  "attempts",   :default => 0
+    t.text     "handler"
+    t.string   "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "test_dummies", :force => true do |t|
     t.datetime "created_at"
@@ -19,8 +32,12 @@ ActiveRecord::Schema.define(:version => 20100510215355) do
   create_table "workflow_nodes", :force => true do |t|
     t.string   "name"
     t.string   "type"
+    t.string   "custom_class"
+    t.string   "assign_to"
+    t.text     "enter_callbacks"
+    t.text     "exit_callbacks"
     t.integer  "process_id"
-    t.boolean  "start",      :default => false
+    t.boolean  "start",           :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -59,8 +76,33 @@ ActiveRecord::Schema.define(:version => 20100510215355) do
 
   add_index "workflow_processes", ["name"], :name => "index_workflow_processes_on_name"
 
+  create_table "workflow_scheduled_action_generators", :force => true do |t|
+    t.integer  "node_id"
+    t.integer  "interval"
+    t.integer  "repeat_count"
+    t.boolean  "repeat",       :default => false
+    t.string   "action"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "workflow_tasks", :force => true do |t|
+    t.integer  "node_id"
+    t.integer  "process_instance_id"
+    t.integer  "generator_id"
+    t.string   "assigned_to"
+    t.string   "type"
+    t.datetime "completed_at"
+    t.datetime "scheduled_for"
+    t.datetime "canceled_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "workflow_transitions", :force => true do |t|
     t.string   "name"
+    t.text     "callbacks"
+    t.text     "guards"
     t.integer  "from_node_id"
     t.integer  "to_node_id"
     t.datetime "created_at"

@@ -24,10 +24,12 @@ class Workflow::ProcessInstance < ActiveRecord::Base
     new_node = transition_to_take.to_node      
     process_instance_node = self.process_instance_nodes.first
     node.execute_exit_callbacks self
+    node.cancel_scheduled_actions self
     transition_to_take.execute_callbacks self
     process_instance_node.node = new_node
     process_instance_node.save!
     self.reload
+    new_node.schedule_actions self
     new_node.execute_enter_callbacks self
 
     new_node

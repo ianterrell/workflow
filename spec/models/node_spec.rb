@@ -16,6 +16,9 @@ describe Workflow::Node do
   it { should have_many(:process_instance_nodes) }
   it { should have_many(:process_instances) }
   
+  it { should have_many(:scheduled_action_generators) }
+  it { should have_many(:scheduled_actions) }
+  
   it { should validate_presence_of(:name) }
   it "should validate uniqueness of name scoped by the process" do
     node = Workflow::Node.new :process => @node.process, :name => @node.name

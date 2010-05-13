@@ -5,11 +5,12 @@ class Workflow::ScheduledAction < Workflow::Action
   validates_presence_of :scheduled_for
   
   def perform
-    # Transitions are a special case.  No repeating or doing anything crazy here.
-    return process_instance.transition! generator.transition unless generator.transition.blank?
-    
-    process_instance.instance.send generator.action
-    schedule_repeat
+    if generator.transition.blank?
+      process_instance.instance.send generator.action
+      schedule_repeat
+    else
+      process_instance.transition! generator.transition 
+    end
   end
   
   def scheduled?

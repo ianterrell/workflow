@@ -23,4 +23,11 @@ describe Workflow::ScheduledActionGenerator do
     @generator.generate @process_instance
     Workflow::ScheduledAction.last.scheduled_for.should == t + 1.second
   end
+  
+  it "should destroy timers on destruction" do
+    Factory.create :scheduled_action, :generator => @generator
+    Workflow::ScheduledAction.count.should == 1
+    @generator.destroy
+    Workflow::ScheduledAction.count.should == 0
+  end
 end

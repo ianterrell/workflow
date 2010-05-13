@@ -1,0 +1,4 @@
+en:
+  workflow:
+    errors:
+      start_node_exists: "Process already has a start node."

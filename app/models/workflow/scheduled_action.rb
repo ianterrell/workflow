@@ -1,6 +1,6 @@
 class Workflow::ScheduledAction < Workflow::Action
   belongs_to :generator, :class_name => "Workflow::ScheduledActionGenerator", :foreign_key => "generator_id"
-  belongs_to :delayed_job, :class_name => "::Delayed::Job", :foreign_key => "delayed_job_id"
+  belongs_to :delayed_job, :class_name => "::Delayed::Job", :foreign_key => "delayed_job_id", :dependent => :destroy
   
   validates_presence_of :scheduled_for
   

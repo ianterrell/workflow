@@ -19,4 +19,13 @@ describe Workflow::ProcessInstance do
     Workflow::ProcessInstance.process_named("asdf").should include(instance)
     Workflow::ProcessInstance.process_named("jkl").should be_empty
   end
+  
+  it "should destroy process instance nodes on destruction" do
+    instance = Factory.create :process_instance
+    node = Factory.create :node, :process => instance.process
+    pin = Factory.create :process_instance_node, :process_instance => instance, :node => node
+    Workflow::ProcessInstanceNode.count.should == 1
+    instance.destroy
+    Workflow::ProcessInstanceNode.count.should == 0
+  end
 end

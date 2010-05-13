@@ -26,8 +26,8 @@ Rspec.configure do |config|
   require 'shoulda/action_controller/matchers'
   # require 'active_support/test_case'
 
-      config.include Shoulda::ActiveRecord::Matchers
-      config.include Shoulda::ActionController::Matchers
+  config.include Shoulda::ActiveRecord::Matchers
+  config.include Shoulda::ActionController::Matchers
 
   # == Mock Framework
   config.mock_with :rspec

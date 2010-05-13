@@ -4,6 +4,7 @@ describe Workflow::Node do
   before do
     # Need one in db for validate_uniqueness_of matcher implementation
     @node = Factory.create :node
+    @node2 = Factory.create :node, :process => @node.process
   end
   
   it "should be valid given valid attributes" do
@@ -25,6 +26,15 @@ describe Workflow::Node do
     node.should_not be_valid
     node.errors[:name].should include("has already been taken")
     node.process = Factory.create(:process)
+    node.should be_valid
+  end
+  
+  it "should validate that it is the only start state in the process" do
+    @node.update_attribute :start, true
+    node = Workflow::Node.new :process => @node.process, :name => @node.name + " start", :start => true
+    node.should_not be_valid
+    node.errors[:base].should include("Process already has a start node.")
+    node.start = false
     node.should be_valid
   end
   
@@ -64,5 +74,41 @@ describe Workflow::Node do
     @node.should_not be_valid
     @node.exit_callbacks = [:x, 1]
     @node.should_not be_valid
+  end
+  
+  it "should destroy outgoing transitions on destruction" do
+    Factory.create :transition, :from_node => @node, :to_node => @node2
+    Workflow::Transition.count.should == 1
+    @node.destroy
+    Workflow::Transition.count.should == 0
+  end
+  
+  it "should destroy incoming transitions on destruction" do
+    Factory.create :transition, :from_node => @node, :to_node => @node2
+    Workflow::Transition.count.should == 1
+    @node2.destroy
+    Workflow::Transition.count.should == 0
+  end
+  
+  it "should destroy timer generators on destruction" do
+    Factory.create :scheduled_action_generator, :node => @node
+    Workflow::ScheduledActionGenerator.count.should == 1
+    @node.destroy
+    Workflow::ScheduledActionGenerator.count.should == 0
+  end
+  
+  it "should destroy timers on destruction" do
+    generator = Factory.create :scheduled_action_generator, :node => @node
+    Factory.create :scheduled_action, :generator => generator
+    Workflow::ScheduledAction.count.should == 1
+    @node.destroy
+    Workflow::ScheduledAction.count.should == 0
+  end
+  
+  it "should destroy process instances nodes on destruction" do
+    Factory.create :process_instance_node, :node => @node
+    Workflow::ProcessInstanceNode.count.should == 1
+    @node.destroy
+    Workflow::ProcessInstanceNode.count.should == 0
   end
 end

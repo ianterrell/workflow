@@ -43,6 +43,14 @@ describe Workflow::ScheduledAction do
     @action.should be_canceled
     # Delayed job bit handled in workflow specs
   end
+  
+  it "should destroy delayed job on destruction" do
+    Workflow::ScheduledAction.count.should == 1
+    Delayed::Job.count.should == 1
+    @action.destroy
+    Workflow::ScheduledAction.count.should == 0
+    Delayed::Job.count.should == 0
+  end
 
   # it "should set its completed at to Time.now when completed!" do
   #   @action.completed_at.should be_nil

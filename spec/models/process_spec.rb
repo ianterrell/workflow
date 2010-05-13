@@ -28,4 +28,18 @@ describe Workflow::Process do
   it "should have a scope by name" do
     Workflow::Process.named(@process.name).should include(@process)
   end
+  
+  it "should destroy nodes on destruction" do
+    @process.nodes.create! :name => "sample"
+    Workflow::Node.count.should == 1
+    @process.destroy
+    Workflow::Node.count.should == 0
+  end
+  
+  it "should destroy process_instances on destruction" do
+    @process.process_instances.create! :instance => TestDummy.new
+    Workflow::ProcessInstance.count.should == 1
+    @process.destroy
+    Workflow::ProcessInstance.count.should == 0
+  end
 end

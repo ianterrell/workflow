@@ -59,12 +59,17 @@ Factory.define :task, :class => Workflow::Task, :default_strategy => :build do |
   f.association :process_instance
 end
 
+Factory.define :action, :class => Workflow::Action, :default_strategy => :build do |f|
+  f.association :node, :factory => :action_node
+  f.association :process_instance
+end
+
 Factory.define :scheduled_action_generator, :class => Workflow::ScheduledActionGenerator, :default_strategy => :build do |f|
   f.association :node
 end
 
 Factory.define :scheduled_action, :class => Workflow::ScheduledAction, :default_strategy => :build do |f|
-  f.association :node, :factory => :task_node
+
   f.association :process_instance
   f.scheduled_for Time.now + 5.minutes
 end

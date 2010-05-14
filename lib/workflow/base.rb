@@ -1,11 +1,21 @@
 module Workflow
+  # This module extends the functionality of ActiveRecord to support Workflow.
   module Base
-    def self.included(recipient)
+    def self.included(recipient) #:nodoc:
       recipient.extend ClassMethods
       recipient.class_eval { include InstanceMethods }
     end
     
+    # This module provides the class level methods that can be used within ActiveRecord model declarations.
     module ClassMethods
+      
+      # This method declares that a model is on a workflow named 'name'.
+      # 
+      # It does the following:
+      # 1. It associates this model with process_instances of class ProcessInstance with a polymorphic has_many
+      # 2. It defines the method start_workflow_name on the model, which, when called, kicks off the workflow process
+      #    by moving the instance into the start state.
+      # 3. It defines the method workflow_name on the model, which returns the ProcessInstance associated with this model and process.
       def on_workflow(name)
         name_symbol = name.underscore.gsub(' ', '_').intern
         self.class_eval <<-RUBY
@@ -27,7 +37,7 @@ module Workflow
       end
     end
     
-    module InstanceMethods
+    module InstanceMethods #:nodoc:
 
     end
   end

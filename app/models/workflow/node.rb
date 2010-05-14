@@ -1,3 +1,10 @@
+# This class is the basic node on the process graph, and represents a state that the instance
+# can enter in the workflow.  This class acts as a simple state that does nothing special by default,
+# while subclasses implement specific behavior.
+# 
+# Nodes may have enter_callbacks and exit_callbacks defined which represent methods that 
+# will be executed on the model when it enters and exits this node, respectively (behavior defined in Callbacks).
+# Nodes may also have ScheduledActionGenerator instances associated with them that provide timed behavior.
 class Workflow::Node < ActiveRecord::Base
   include Workflow::Callbacks
   
@@ -20,18 +27,20 @@ class Workflow::Node < ActiveRecord::Base
   
   scope :named, lambda { |name| where(:name => name) }
   
+  # This creates ScheduledAction instances for all of the generators associated with this node.
   def schedule_actions(process_instance)
     self.scheduled_action_generators.each do |generator|
       generator.generate process_instance
     end
   end
   
+  # This sends the cancel! signal to all scheduled actions tied to this node and the instance sent.
   def cancel_scheduled_actions(process_instance)
     scheduled_actions.where(:process_instance_id => process_instance.id).each { |a| a.cancel! }
   end
   
 protected
-  def only_one_start_node
+  def only_one_start_node #:nodoc:
     self.errors.add(:base, I18n.t('workflow.errors.start_node_exists')) if self.start? && process.start_node && process.start_node != self
   end
 end

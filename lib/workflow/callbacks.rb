@@ -1,11 +1,16 @@
 module Workflow
+  # This module encapsulates the behavior of callbacks, used internally for Node's enter_callbacks and exit_callbacks,
+  # and Transition's unnamed callbacks.
+  #
+  # Callbacks are methods that are sent to the instance on the workflow when they are executed.  If the instance does
+  # not respond to a particular callback, execution continues but a warning is logged.
   module Callbacks
-    def self.included(recipient)
+    def self.included(recipient) #:nodoc:
       recipient.extend ClassMethods
       recipient.class_eval { include InstanceMethods }
     end
     
-    module ClassMethods
+    module ClassMethods #:nodoc:all
       def has_callbacks(*names)
         names = [''] if names.empty?
         names.map!{|name| :"#{name}#{"_" unless name.to_s.empty?}callbacks"}
@@ -27,7 +32,7 @@ module Workflow
       end
     end
     
-    module InstanceMethods
+    module InstanceMethods #:nodoc:all
     protected
       def execute_callback_type_on_instance(callback_type, instance)
         callbacks = self.send callback_type

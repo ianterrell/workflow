@@ -1,3 +1,10 @@
+# A Transition defines a named relationship between two nodes.  To analogize, they are the roads in between the cities (nodes)
+# on the map (process).
+#
+# Transitions may have callbacks defined, which represent methods that are executed on the model instance when it takes
+# the transition( behavior defined in Callbacks).  
+# They may also have guards defined, which represent predicate methods (ending in ?) on the model
+# that should return true or false to determine if the model is allowed to take this transition.
 class Workflow::Transition < ActiveRecord::Base
   include Workflow::Callbacks
   
@@ -16,6 +23,9 @@ class Workflow::Transition < ActiveRecord::Base
   
   delegate :process, :to => :from_node
   
+  # If no guards are defined, this method returns true.
+  # If guards are defined, this method returns true if they all return true when sent to the model instance.
+  # If the model instance does not respond to a particular guard, a warning is logged but it is assumed to return true.
   def guards_pass?(instance)
     return true if guards.nil?
     (guards.is_a?(Array) ? guards : [guards]).all? do |guard| 
@@ -30,12 +40,12 @@ class Workflow::Transition < ActiveRecord::Base
 
 protected
 
-  def guards_are_valid
+  def guards_are_valid #:nodoc:
     valid = (guards.is_a?(Array) ? guards : [guards]).all? { |c| guard_is_valid?(c) }
     self.errors.add(:guards, "must be nil, symbols, strings, or arrays of them ending in ?") unless valid
   end
 
-  def guard_is_valid?(guard)
+  def guard_is_valid?(guard) #:nodoc:
     guard.nil? || ((guard.is_a?(String) || guard.is_a?(Symbol)) && guard.to_s.ends_with?('?'))
   end
 end

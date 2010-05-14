@@ -26,5 +26,4 @@ module Workflow
   # Raised when the custom decision class does not quack like the duck we want -- it does
   # not implement perform
   class CustomActionDoesntQuack < Error; end
-  
 end

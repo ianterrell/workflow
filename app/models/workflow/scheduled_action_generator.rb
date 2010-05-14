@@ -12,6 +12,11 @@ class Workflow::ScheduledActionGenerator < ActiveRecord::Base
     else
       raise Workflow::NoWayToPerformAction
     end
-    clazz.create :generator => self, :node => node, :process_instance => process_instance, :scheduled_for => interval.from_now
+    clazz.create :generator => self, :node => node, :process_instance => process_instance, :scheduled_for => self.scheduled_time(process_instance)
+  end
+  
+protected
+  def scheduled_time(process_instance)
+    interval.from_now
   end
 end

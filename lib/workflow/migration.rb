@@ -70,7 +70,7 @@ module Workflow
       end
       
       def timer(options)
-        attributes = {}
+        attributes = { :node => @node }
         attributes[:interval] = options[:after] if options[:after]
         if options[:every]
           attributes[:interval] = options[:every] 
@@ -80,12 +80,22 @@ module Workflow
             attributes[:repeat_count] = options[:up_to].try(:max).try(:+, 1)
           end
         end
+        clazz = if options[:generator_class]
+          begin
+            options[:generator_class].constantize
+          rescue NameError
+            raise CustomGeneratorClassDoesNotExist.new("Custom generator classes must be defined; the class '#{options[:generator_class]}' in the node '#{@node.name}' can not be found.")
+          end
+        else
+          Workflow::ScheduledActionGenerator
+        end
+        raise CustomGeneratorMustDescendFromWorkflowGenerator.new("Custom generator classes must descend from Workflow::ScheduledActionGenerator; the class '#{options[:generator_class]}' in the node '#{@node.name}' does not.") unless clazz.ancestors.include?(Workflow::ScheduledActionGenerator)
         attributes[:transition] = options[:take_transition].to_s if options[:take_transition]
         attributes[:action] = options[:perform].to_s if options[:perform]
         raise TimerNeedsInterval.new("A timer in the node '#{@node.name}' needs an interval, specify with either :after or :every.") unless attributes[:interval]
         raise TimerNeedsActionOrTransition.new("A timer in the node '#{@node.name}' needs either an action to perform (use :perform) or a transition to take (use :take_transition).") unless attributes[:action] || attributes[:transition]
         raise TimerNeedsExactlyOneActionOrTransition.new("A timer in the node '#{@node.name}' is trying to specify an action and a transition -- it can only do exactly one.") if attributes[:action] && attributes[:transition]
-        @node.scheduled_action_generators.create! attributes
+        clazz.create! attributes
       end
       
       # This is not meant to be called directly, although if you want, you can!
@@ -112,5 +122,7 @@ module Workflow
     class CustomNodeMustDefineClass < Error; end
     class CustomNodeClassDoesNotExist < Error; end
     class CustomNodeMustDescendFromWorkflowNode < Error; end
+    class CustomGeneratorClassDoesNotExist < Error; end
+    class CustomGeneratorMustDescendFromWorkflowGenerator < Error; end
   end
 end

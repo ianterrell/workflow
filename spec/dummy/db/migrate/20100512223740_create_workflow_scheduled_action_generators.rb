@@ -4,7 +4,7 @@ class CreateWorkflowScheduledActionGenerators < ActiveRecord::Migration
       t.references :node
       t.integer :interval, :repeat_count
       t.boolean :repeat, :default => false
-      t.string :action, :transition, :custom_class
+      t.string :action, :transition, :custom_class, :type
       t.timestamps
     end
     add_index :workflow_scheduled_action_generators, :node_id

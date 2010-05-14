@@ -12,6 +12,7 @@ require 'app/models/workflow/action'
 require 'app/models/workflow/scheduled_action'
 require 'app/models/workflow/scheduled_action_generator'
 require 'spec/dummy/app/models/custom_node'
+require 'spec/dummy/app/models/custom_timer_generator'
 
 # Huh.  Just realized that some of these factories contain inconsistent data -- like
 # a transition transitioning between processes.  This needs a bit of work.
@@ -71,6 +72,10 @@ Factory.define :action, :class => Workflow::Action, :default_strategy => :build 
 end
 
 Factory.define :scheduled_action_generator, :class => Workflow::ScheduledActionGenerator, :default_strategy => :build do |f|
+  f.association :node
+end
+
+Factory.define :custom_timer_generator, :class => CustomTimerGenerator, :default_strategy => :build do |f|
   f.association :node
 end
 

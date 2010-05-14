@@ -19,6 +19,8 @@ def create_simple_timer_workflow(options={})
     @timer_generator = Factory.create :scheduled_action_generator, :node => @timer_node, :interval => options[:interval], :action => options[:action]
   elsif options[:custom_class]
     @timer_generator = Factory.create :scheduled_action_generator, :node => @timer_node, :interval => options[:interval], :action => "fake", :custom_class => options[:custom_class]
+  elsif options[:custom_generator]
+    @timer_generator = Factory.create :custom_timer_generator, :node => @timer_node, :interval => options[:interval], :action => "bar"
   else
     @timer_generator = Factory.create :scheduled_action_generator, :node => @timer_node, :interval => options[:interval], :action => "bar"
   end
@@ -203,5 +205,30 @@ describe "A simple workflow with a timer based transition" do
     perform_timer_workflow
     @worker.run(Delayed::Job.first)
     @model.reload.test_workflow.node.should == @end_node
+  end
+end
+
+describe "A simple workflow with a custom timer generator" do
+  before do
+    create_simple_timer_workflow :custom_generator => true, :interval => 1.week
+  end
+  
+  it "should use the custom generator" do
+    CustomTimerGenerator.count.should == 1
+  end
+  
+  it "should still behave normally" do
+    TestDummy.bar_called = 0
+    perform_timer_workflow
+    @worker.run(Delayed::Job.first)
+    TestDummy.bar_called.should == 1
+  end
+  
+  it "should use the custom generator's logic (double interval)" do
+    t = Time.now
+    Time.should_receive(:now).at_least(:once).and_return(t)
+    perform_timer_workflow
+    Workflow::ScheduledAction.count.should == 1
+    Workflow::ScheduledAction.first.scheduled_for.should == t + 2.weeks
   end
 end

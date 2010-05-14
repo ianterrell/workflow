@@ -10,7 +10,8 @@ describe "Running a migration without an up" do
     begin
       NoUpMigration.up
       fail
-    rescue Workflow::Migration::UpNotDefined
+    rescue Workflow::Migration::Error
+      $!.message.should == "Your migration must provide the class level 'up' method."
     end 
   end
 end
@@ -25,7 +26,8 @@ describe "Running a migration without a down" do
     begin
       NoDownMigration.down
       fail
-    rescue Workflow::Migration::DownNotDefined
+    rescue Workflow::Migration::Error
+      $!.message.should == "Your migration must provide the class level 'down' method."
     end 
   end
 end

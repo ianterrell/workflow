@@ -100,7 +100,7 @@ describe "Creating a state without a process" do
     begin
       CreateStateWithoutProcessMigration.up
       fail
-    rescue Workflow::Migration::NodeMustBeWithinProcess
+    rescue Workflow::Migration::Error
       $!.message.should == "The node 'test_state' must be defined within a process."
     end 
   end

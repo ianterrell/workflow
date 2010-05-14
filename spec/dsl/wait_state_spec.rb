@@ -118,7 +118,7 @@ describe "Creating a process with a simple transition based timer without a tran
     begin
       CreateProcessMigration.up
       fail
-    rescue Workflow::Migration::WaitStateNeedsTransitionTo
+    rescue Workflow::Migration::Error
       $!.message.should == "The wait state 'holding_pattern' in the process 'Test Workflow' needs to specify a node to transition to with :transition_to."
     end 
   end
@@ -142,7 +142,7 @@ describe "Creating a process with a simple transition based timer without an int
     begin
       CreateProcessMigration.up
       fail
-    rescue Workflow::Migration::WaitStateNeedsInterval
+    rescue Workflow::Migration::Error
       $!.message.should == "The wait state 'holding_pattern' in the process 'Test Workflow' needs to specify an interval to wait with :after."
     end 
   end

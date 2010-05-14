@@ -80,7 +80,7 @@ describe "Creating a process with a custom node without a custom class" do
     begin
       CreateProcessMigration.up
       fail
-    rescue Workflow::Migration::CustomNodeMustDefineClass
+    rescue Workflow::Migration::Error
       $!.message.should == "The custom node 'app_provided' must specify its class with :node_class."
     end 
   end
@@ -107,7 +107,7 @@ describe "Creating a process with a custom node with a custom class that does no
     begin
       CreateProcessMigration.up
       fail
-    rescue Workflow::Migration::CustomNodeMustDescendFromWorkflowNode
+    rescue Workflow::Migration::Error
       $!.message.should == "Custom node classes must descend from Workflow::Node; the class 'TestDummy' in the node 'app_provided' does not."
     end 
   end
@@ -134,7 +134,7 @@ describe "Creating a process with a custom node with a custom class that does no
     begin
       CreateProcessMigration.up
       fail
-    rescue Workflow::Migration::CustomNodeClassDoesNotExist
+    rescue Workflow::Migration::Error
       $!.message.should == "Custom node classes must be defined; the class 'WhereAmI' in the node 'app_provided' can not be found."
     end 
   end

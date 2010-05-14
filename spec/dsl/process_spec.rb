@@ -64,7 +64,8 @@ describe "Creating a process without a start state explicitly defined" do
     begin
       CreateProcessMigration.up
       fail
-    rescue Workflow::Migration::ProcessMustHaveStartState
+    rescue Workflow::Migration::Error
+      $!.message.should == "The process 'Test Workflow' must have a start state."
     end
   end
 end
@@ -82,7 +83,8 @@ describe "Creating a process without any state" do
     begin
       CreateProcessMigration.up
       fail
-    rescue Workflow::Migration::ProcessMustHaveStartState
+    rescue Workflow::Migration::Error
+      $!.message.should == "The process 'Test Workflow' must have a start state."
     end 
   end
 end

@@ -241,7 +241,7 @@ describe "Creating a process with a simple action based timer without an interva
     begin
       CreateProcessMigration.up
       fail
-    rescue Workflow::Migration::TimerNeedsInterval
+    rescue Workflow::Migration::Error
       $!.message.should == "A timer in the node 'timed_state' needs an interval, specify with either :after or :every."
     end 
   end
@@ -268,7 +268,7 @@ describe "Creating a process with a timer that has neither action nor transition
     begin
       CreateProcessMigration.up
       fail
-    rescue Workflow::Migration::TimerNeedsActionOrTransition
+    rescue Workflow::Migration::Error
       $!.message.should == "A timer in the node 'timed_state' needs either an action to perform (use :perform) or a transition to take (use :take_transition)."
     end 
   end
@@ -295,7 +295,7 @@ describe "Creating a process with a timer that has both action and transition" d
     begin
       CreateProcessMigration.up
       fail
-    rescue Workflow::Migration::TimerNeedsExactlyOneActionOrTransition
+    rescue Workflow::Migration::Error
       $!.message.should == "A timer in the node 'timed_state' is trying to specify an action and a transition -- it can only do exactly one."
     end 
   end
@@ -322,7 +322,7 @@ describe "Creating a process with a timer that repeats without enumerator" do
     begin
       CreateProcessMigration.up
       fail
-    rescue Workflow::Migration::TimerRepeatCountMustBeEnumerator
+    rescue Workflow::Migration::Error
       $!.message.should == "A timer in the node 'timed_state' specified a repeat count without using an enumerator (use 3.times rather than 3)."
     end 
   end
@@ -350,7 +350,7 @@ describe "Creating a process with a timer with a nonexistent custom generator cl
     begin
       CreateProcessMigration.up
       fail
-    rescue Workflow::Migration::CustomGeneratorClassDoesNotExist
+    rescue Workflow::Migration::Error
       $!.message.should == "Custom generator classes must be defined; the class 'WhereAmI' in the node 'timed_state' can not be found."
     end 
   end
@@ -378,7 +378,7 @@ describe "Creating a process with a timer with a custom generator class that doe
     begin
       CreateProcessMigration.up
       fail
-    rescue Workflow::Migration::CustomGeneratorMustDescendFromWorkflowGenerator
+    rescue Workflow::Migration::Error
       $!.message.should == "Custom generator classes must descend from Workflow::ScheduledActionGenerator; the class 'TestDummy' in the node 'timed_state' does not."
     end 
   end

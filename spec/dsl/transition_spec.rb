@@ -100,7 +100,7 @@ describe "Creating a process with a transition without a to node" do
     begin
       CreateProcessMigration.up
       fail
-    rescue Workflow::Migration::TransitionMustGoSomewhere
+    rescue Workflow::Migration::Error
       $!.message.should == "The transition 'go' in the node 'start' must have a :to option specifying where it goes."
     end 
   end
@@ -124,7 +124,7 @@ describe "Creating a process with a transition to a nonexistent node" do
     begin
       CreateProcessMigration.up
       fail
-    rescue Workflow::Migration::NodeDoesNotExist
+    rescue Workflow::Migration::Error
       $!.message.should == "The node 'vegas_baby' referenced in the transition 'go' in the node 'start' does not exist in the process 'Test Workflow'."
     end 
   end

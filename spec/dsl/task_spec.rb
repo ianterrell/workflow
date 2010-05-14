@@ -73,7 +73,7 @@ describe "Creating a process with a custom class based task node" do
           state :start, :start_state => true do
             transition :go, :to => :do_it
           end
-          task :do_it, :class_name => "FooBar" do
+          task :do_it, :task_class => "FooBar" do
             transition :completed, :to => :end
           end
           state :end
@@ -97,7 +97,7 @@ describe "Creating a process with a task without a name" do
           state :start, :start_state => true do
             transition :go, :to => :end
           end
-          task :class_name => "FooBar" do
+          task :task_class => "FooBar" do
             transition :yes, :to => :end
             transition :no, :to => :start
           end

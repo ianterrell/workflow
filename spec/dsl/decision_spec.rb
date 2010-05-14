@@ -46,7 +46,7 @@ describe "Creating a process with a custom class based decision node" do
           state :start, :start_state => true do
             transition :go, :to => :complicated_decision
           end
-          decision :complicated_decision, :class_name => "FooBar" do
+          decision :complicated_decision, :decision_class => "FooBar" do
             transition :yes, :to => :end
             transition :no, :to => :start
           end
@@ -71,7 +71,7 @@ describe "Creating a process with a decision without a name" do
           state :start, :start_state => true do
             transition :go, :to => :end
           end
-          decision :class_name => "FooBar" do
+          decision :decision_class => "FooBar" do
             transition :yes, :to => :end
             transition :no, :to => :start
           end

@@ -11,6 +11,7 @@ require 'app/models/workflow/task'
 require 'app/models/workflow/action'
 require 'app/models/workflow/scheduled_action'
 require 'app/models/workflow/scheduled_action_generator'
+require 'spec/dummy/app/models/custom_node'
 
 # Huh.  Just realized that some of these factories contain inconsistent data -- like
 # a transition transitioning between processes.  This needs a bit of work.
@@ -43,6 +44,11 @@ Factory.define :action_node, :class => Workflow::ActionNode, :default_strategy =
   f.association :process
 end
 
+Factory.define :custom_node, :class => CustomNode, :default_strategy => :build do |f|
+  f.sequence(:name) { |n| "Custom Node #{n}" }
+  f.association :process
+end
+
 Factory.define :transition, :class => Workflow::Transition, :default_strategy => :build do |f|
   f.sequence(:name) { |n| "Test Transition #{n}" }
   f.association :from_node, :factory => :node
@@ -69,7 +75,6 @@ Factory.define :scheduled_action_generator, :class => Workflow::ScheduledActionG
 end
 
 Factory.define :scheduled_action, :class => Workflow::ScheduledAction, :default_strategy => :build do |f|
-
   f.association :process_instance
   f.scheduled_for Time.now + 5.minutes
 end

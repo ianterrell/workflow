@@ -28,15 +28,29 @@ module Workflow
       end
       
       def decision(name, options={}, &block)
+        options[:class_name] = options[:decision_class]
         create_node Workflow::DecisionNode, name, options, &block
       end
 
       def task(name, options={}, &block)
+        options[:class_name] = options[:task_class]
         create_node Workflow::TaskNode, name, options, &block
       end
 
       def action(name, options={}, &block)
+        options[:class_name] = options[:action_class]
         create_node Workflow::ActionNode, name, options, &block
+      end
+      
+      def custom(name, options={}, &block)
+        raise CustomNodeMustDefineClass.new("The custom node '#{name}' must specify its class with :node_class.") unless options[:node_class]
+        clazz = begin
+          options[:node_class].constantize
+        rescue NameError
+          raise CustomNodeClassDoesNotExist.new("Custom node classes must be defined; the class '#{options[:node_class]}' in the node '#{name}' can not be found.")
+        end
+        raise CustomNodeMustDescendFromWorkflowNode.new("Custom node classes must descend from Workflow::Node; the class '#{options[:node_class]}' in the node '#{name}' does not.") unless clazz.ancestors.include?(Workflow::Node)
+        create_node clazz, name, options, &block
       end
       
       def wait_state(name, options)
@@ -95,5 +109,8 @@ module Workflow
     class TimerRepeatCountMustBeEnumerator < Error; end
     class WaitStateNeedsTransitionTo < Error; end
     class WaitStateNeedsInterval < Error; end
+    class CustomNodeMustDefineClass < Error; end
+    class CustomNodeClassDoesNotExist < Error; end
+    class CustomNodeMustDescendFromWorkflowNode < Error; end
   end
 end

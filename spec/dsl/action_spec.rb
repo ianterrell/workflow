@@ -45,7 +45,7 @@ describe "Creating a process with a custom class based action node" do
           state :start, :start_state => true do
             transition :go, :to => :do_it
           end
-          action :do_it, :class_name => "FooBar" do
+          action :do_it, :action_class => "FooBar" do
             transition :completed, :to => :end
           end
           state :end
@@ -69,7 +69,7 @@ describe "Creating a process with an action without a name" do
           state :start, :start_state => true do
             transition :go, :to => :end
           end
-          action :class_name => "FooBar" do
+          action :action_class => "FooBar" do
             transition :yes, :to => :end
             transition :no, :to => :start
           end

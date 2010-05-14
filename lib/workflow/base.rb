@@ -16,6 +16,8 @@ module Workflow
             @#{name_symbol}_process_instance ||= Workflow::ProcessInstance.new :process => @#{name_symbol}_process, :instance => self
             @#{name_symbol}_process_instance.nodes << @#{name_symbol}_process.start_node
             @#{name_symbol}_process_instance.save!
+            @#{name_symbol}_process.start_node.schedule_actions @#{name_symbol}_process_instance
+            @#{name_symbol}_process.start_node.execute_enter_callbacks @#{name_symbol}_process_instance
           end
           
           def #{name_symbol}

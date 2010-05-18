@@ -72,7 +72,8 @@ module Workflow
       #     end
       #   end
       def create_process(name, &block)
-        create_or_update_process name, true, &block
+        @create_process = true
+        create_or_update_process name, &block
       end
       
       # Renames an existing process from the old_name to the new_name.
@@ -93,7 +94,8 @@ module Workflow
       #     end
       #   end
       def update_process(name, &block)
-        create_or_update_process name, false, &block
+        @create_process = false
+        create_or_update_process name, &block
       end
       
       # Destroys the process with the given name.
@@ -316,6 +318,14 @@ module Workflow
         end
       end
       
+      # Renames the node in the current process from old_name to new_name.  Must be called within an
+      # update_process block.
+      def rename_node(old_name, new_name)
+        raise Error.new("Renaming nodes ('#{old_name}' => '#{new_name}') must occur in an update_process call.") unless @process && @update_process
+        @node = @process.nodes(true).find_by_name! old_name.to_s
+        @node.update_attribute :name, new_name.to_s
+      end
+      
       # Creates a transition from the current node to another node in the process.
       # 
       # Required:
@@ -412,10 +422,11 @@ module Workflow
         @node_blocks[node] = block if block_given?
       end
       
-      def create_or_update_process(name, create, &block) #:nodoc:
+      def create_or_update_process(name, &block) #:nodoc:
+        @update_process = !@create_process
         @node_blocks = {}
         Workflow::Process.transaction do
-          @process = create ? Workflow::Process.create!(:name => name) : Workflow::Process.find_by_name!(name)
+          @process = @create_process ? Workflow::Process.create!(:name => name) : Workflow::Process.find_by_name!(name)
           block.call unless block.nil?
           @node_blocks.each_pair { |node, block| @node = node; block.call }
           raise Error.new("The process '#{@process.name}' must have a start state.") if @process.reload.start_node.nil?

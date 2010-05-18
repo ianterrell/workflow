@@ -32,8 +32,12 @@ describe "Creating a process with a transition between states" do
     Workflow::Transition.first.to_node.should == Workflow::Node.find_by_name("end")
   end
   
-  it "should have no callbacks by defeault" do
+  it "should have no callbacks by default" do
     Workflow::Transition.first.callbacks.should be_nil
+  end
+  
+  it "should have no guards by default" do
+    Workflow::Transition.first.guards.should be_nil
   end
 end
 
@@ -56,6 +60,28 @@ describe "Creating a process with a transition between states with callbacks" do
   it "should create a transition" do
     Workflow::Transition.first.callbacks.should == :do_something
     Workflow::Transition.last.callbacks.should == [:do_something, :do_something_else]
+  end
+end
+
+describe "Creating a process with a transition between states with guards" do
+  before do
+    class CreateProcessMigration < Workflow::Migration
+      def self.up
+        create_process "Test Workflow" do
+          state :start, :start_state => true do
+            transition :single, :to => :end, :guard => :something?
+            transition :multiple, :to => :end, :guards => [:something?, :something_else?]
+          end
+          state :end
+        end
+      end
+    end
+    CreateProcessMigration.up
+  end
+  
+  it "should create a transition" do
+    Workflow::Transition.first.guards.should == :something?
+    Workflow::Transition.last.guards.should == [:something?, :something_else?]
   end
 end
 
@@ -126,6 +152,30 @@ describe "Creating a process with a transition to a nonexistent node" do
       fail
     rescue Workflow::Migration::Error
       $!.message.should == "The node 'vegas_baby' referenced in the transition 'go' in the node 'start' does not exist in the process 'Test Workflow'."
+    end 
+  end
+end
+
+describe "Creating a process with a transition using :guard and :guards" do
+  before do
+    class CreateProcessMigration < Workflow::Migration
+      def self.up
+        create_process "Test Workflow" do
+          state :start, :start_state => true do
+            transition :go, :to => :end, :guard => :something?, :guards => [:something?, :something_else?]
+          end
+          state :end
+        end
+      end
+    end
+  end
+  
+  it "should raise an exception" do
+    begin
+      CreateProcessMigration.up
+      fail
+    rescue Workflow::Migration::Error
+      $!.message.should == "The transition 'go' in the node 'start' may use either :guard for singular or :guards for plural but not both."
     end 
   end
 end

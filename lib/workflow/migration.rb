@@ -309,17 +309,19 @@ module Workflow
       #
       # Optional:
       # * :on_transition -- callback methor or methods to be executed on the model when it takes this transition.
+      # * :guard or :guards -- guard methods on the model that must return true for the transition to be followed.
       #
       # Examples:
       #   state :war do
-      #     transition :advance, :to => :front_lines
-      #     transition :retreat, :to => :cover, :on_transition => :call_for_help
+      #     transition :surrender, :to => :enemy      
+      #     transition :advance, :to => :front_lines, :guard => :winning?
+      #     transition :retreat, :to => :cover, :on_transition => :call_for_help, :guards => [:losing?, :not_on_cliff?]
       #   end
       def transition(name, options)
         raise Error.new("The transition '#{name}' in the node '#{@node.name}' must have a :to option specifying where it goes.") unless options[:to]
         raise Error.new("The node '#{options[:to]}' referenced in the transition '#{name}' in the node '#{@node.name}' does not exist in the process '#{@node.process.name}'.") unless (to_node = @process.nodes(true).named(options[:to].to_s).first)
-
-        @node.transitions.create! :name => name.to_s, :to_node => to_node, :callbacks => options[:on_transition]
+        raise Error.new("The transition '#{name}' in the node '#{@node.name}' may use either :guard for singular or :guards for plural but not both.") if options[:guard] && options[:guards]
+        @node.transitions.create! :name => name.to_s, :to_node => to_node, :callbacks => options[:on_transition], :guards => (options[:guard] ? options[:guard] : options[:guards])
       end
       
       # Creates a timed action on the node to take a transition or execute an action.

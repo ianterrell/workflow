@@ -414,8 +414,8 @@ module Workflow
         raise Error.new("A timer in the node '#{@node.name}' is trying to specify an action and a transition -- it can only do exactly one.") if attributes[:action] && attributes[:transition]
         clazz.create! attributes
       end
-      
-      # This is not meant to be called directly, although if you want, you can!
+    
+    private
       def create_node(clazz, name, options={}, &block) #:nodoc:
         raise Error.new("The node '#{name}' must be defined within a process.") unless @process
         node = clazz.create! :process => @process.reload, :name => name.to_s, :start => options[:start_state], :enter_callbacks => options[:enter], :exit_callbacks => options[:exit], :custom_class => options[:class_name], :assign_to => options[:assign_to]

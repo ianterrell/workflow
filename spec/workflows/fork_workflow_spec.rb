@@ -171,7 +171,7 @@ describe "A workflow with a bad disambiguation" do
     @model.test_workflow.transition! :go, 1
       fail
     rescue Workflow::NoSuchTransition
-      $!.message.should == "Disambiguation passed is not a ProcessInstanceNode that belongs to this ProcessInstance (transition named 'go')."
+      $!.message.should == "Disambiguation passed is not a ProcessInstanceNode that belongs to this ProcessInstance or a Node in this Process (transition named 'go')."
     end
   end
 end
@@ -191,7 +191,7 @@ describe "A workflow with a disambiguation pin belonging to another instance" do
     @model.test_workflow.transition! :go, @model2.test_workflow.process_instance_nodes.first
       fail
     rescue Workflow::NoSuchTransition
-      $!.message.should == "Disambiguation passed is not a ProcessInstanceNode that belongs to this ProcessInstance (transition named 'go')."
+      $!.message.should == "Disambiguation passed is not a ProcessInstanceNode that belongs to this ProcessInstance or a Node in this Process (transition named 'go')."
     end
   end
 end
@@ -210,7 +210,7 @@ describe "A workflow with a disambiguation node belonging to another process" do
     @model.test_workflow.transition! :go, @unrelated_node
       fail
     rescue Workflow::NoSuchTransition
-      $!.message.should == "Disambiguation passed is not a ProcessInstanceNode that belongs to this ProcessInstance (transition named 'go')."
+      $!.message.should == "Disambiguation passed is not a ProcessInstanceNode that belongs to this ProcessInstance or a Node in this Process (transition named 'go')."
     end
   end
 end

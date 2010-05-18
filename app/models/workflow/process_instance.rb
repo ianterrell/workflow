@@ -46,7 +46,7 @@ class Workflow::ProcessInstance < ActiveRecord::Base
     elsif disambiguation.is_a?(Workflow::Node) && disambiguation.process == process
       process_instance_node = process_instance_nodes.for_node(disambiguation).first
     else
-      raise Workflow::NoSuchTransition.new("Disambiguation passed is not a ProcessInstanceNode that belongs to this ProcessInstance (transition named '#{name}').")
+      raise Workflow::NoSuchTransition.new("Disambiguation passed is not a ProcessInstanceNode that belongs to this ProcessInstance or a Node in this Process (transition named '#{name}').")
     end
     raise Workflow::NoSuchTransition.new("Could not find a transition named '#{name}' from current nodes.") unless process_instance_node
     

@@ -71,14 +71,29 @@ module Workflow
       #       ...
       #     end
       #   end
-      def create_process(name)
-        @node_blocks = {}
-        Workflow::Process.transaction do
-          @process = Workflow::Process.create! :name => name
-          yield if block_given?
-          @node_blocks.each_pair { |node, block| @node = node; block.call }
-          raise Error.new("The process '#{@process.name}' must have a start state.") if @process.reload.start_node.nil?
-        end
+      def create_process(name, &block)
+        create_or_update_process name, true, &block
+      end
+      
+      # Renames an existing process from the old_name to the new_name.
+      def rename_process(old_name, new_name)
+        @process = Workflow::Process.find_by_name! old_name
+        @process.update_attribute :name, new_name
+      end
+      
+      # This opens up an existing workflow process to be extended.  The block passed to it will be executed to create
+      # new or alter existing subparts of the process.
+      #
+      # If the process does not end up with a start state, an Error is raised.
+      #
+      # Example:
+      #   update_process "Publication Process" do
+      #     state :new_state do
+      #       ...
+      #     end
+      #   end
+      def update_process(name, &block)
+        create_or_update_process name, false, &block
       end
       
       # Destroys the process with the given name.
@@ -395,6 +410,16 @@ module Workflow
         raise Error.new("The node '#{name}' must be defined within a process.") unless @process
         node = clazz.create! :process => @process.reload, :name => name.to_s, :start => options[:start_state], :enter_callbacks => options[:enter], :exit_callbacks => options[:exit], :custom_class => options[:class_name], :assign_to => options[:assign_to]
         @node_blocks[node] = block if block_given?
+      end
+      
+      def create_or_update_process(name, create, &block) #:nodoc:
+        @node_blocks = {}
+        Workflow::Process.transaction do
+          @process = create ? Workflow::Process.create!(:name => name) : Workflow::Process.find_by_name!(name)
+          block.call unless block.nil?
+          @node_blocks.each_pair { |node, block| @node = node; block.call }
+          raise Error.new("The process '#{@process.name}' must have a start state.") if @process.reload.start_node.nil?
+        end
       end
     end
     

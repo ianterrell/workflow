@@ -8,8 +8,8 @@
 # 4. If none of the above are true, it raises a NoWayToMakeDecision error.
 #
 # If the value returned by the method on the model or the transition_to_take method on the instance used is a boolean value,
-# the workflow system will attempt to transition along a transition named "yes" and "true" for TrueClass, and "no" and "false"
-# for FalseClass.  In this way your workflow transitions can be more nicely named.
+# the workflow system will attempt to transition along a transition named "yes" for TrueClass, and "no" for FalseClass.  
+# In this way your workflow transitions can be more nicely named.
 class Workflow::DecisionNode < Workflow::Node
   def execute_enter_callbacks(process_instance) #:nodoc:
     super
@@ -18,7 +18,7 @@ class Workflow::DecisionNode < Workflow::Node
   
 protected 
   def transition(process_instance) #:nodoc:
-    process_instance.transition! transition_to_take(process_instance.instance)
+    process_instance.transition! transition_to_take(process_instance.instance), self
   end
 
   def transition_to_take(instance) #:nodoc:
@@ -33,9 +33,9 @@ protected
     end
     
     if value.is_a? TrueClass
-      ["yes", "true"]
+      "yes"
     elsif value.is_a? FalseClass
-      ["no", "false"]
+      "no"
     else
       value
     end

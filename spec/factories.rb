@@ -6,6 +6,8 @@ require 'app/models/workflow/node'
 require 'app/models/workflow/decision_node'
 require 'app/models/workflow/task_node'
 require 'app/models/workflow/action_node'
+require 'app/models/workflow/fork_node'
+require 'app/models/workflow/join_node'
 require 'app/models/workflow/transition'
 require 'app/models/workflow/task'
 require 'app/models/workflow/action'
@@ -42,6 +44,16 @@ end
 
 Factory.define :action_node, :class => Workflow::ActionNode, :default_strategy => :build do |f|
   f.sequence(:name) { |n| "Action Node #{n}" }
+  f.association :process
+end
+
+Factory.define :fork_node, :class => Workflow::ForkNode, :default_strategy => :build do |f|
+  f.sequence(:name) { |n| "Fork Node #{n}" }
+  f.association :process
+end
+
+Factory.define :join_node, :class => Workflow::JoinNode, :default_strategy => :build do |f|
+  f.sequence(:name) { |n| "Join Node #{n}" }
   f.association :process
 end
 

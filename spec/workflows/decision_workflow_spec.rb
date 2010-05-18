@@ -39,24 +39,6 @@ describe "A simple workflow with a decision node with yes/no" do
   end
 end
 
-describe "A simple workflow with a decision node with true/false" do
-  before do
-    create_simple_decision_workflow "grumpy?", "true", "false"
-  end
-  
-  it "should take the 'true' transition if true" do
-    TestDummy.grumpy = true
-    perform_decision_workflow
-    @model.test_workflow.node.should == @yes_node
-  end
-  
-  it "should take the 'false' transition if false" do
-    TestDummy.grumpy = false
-    perform_decision_workflow
-    @model.test_workflow.node.should == @no_node
-  end
-end
-
 describe "A simple workflow with a decision node with foo/bar symbols" do
   before do
     create_simple_decision_workflow "grumpy?", "foo", "bar"
@@ -74,7 +56,6 @@ describe "A simple workflow with a decision node with foo/bar symbols" do
     @model.test_workflow.node.should == @no_node
   end
 end
-
 
 describe "A simple workflow with a decision node with foo/bar strings" do
   before do
@@ -112,24 +93,6 @@ describe "A simple workflow with a decision node using a class to decide with ye
   end
 end
 
-describe "A simple workflow with a decision node using a class to decide with true/false" do
-  before do
-    create_simple_decision_workflow "test", "true", "false"
-  end
-  
-  it "should take the 'true' transition if true" do
-    TestDecision.value = true
-    perform_decision_workflow
-    @model.test_workflow.node.should == @yes_node
-  end
-  
-  it "should take the 'false' transition if false" do
-    TestDecision.value = false
-    perform_decision_workflow
-    @model.test_workflow.node.should == @no_node
-  end
-end
-
 describe "A simple workflow with a decision node using a class to decide with foo/bar symbols" do
   before do
     create_simple_decision_workflow "test", "foo", "bar"
@@ -147,7 +110,6 @@ describe "A simple workflow with a decision node using a class to decide with fo
     @model.test_workflow.node.should == @no_node
   end
 end
-
 
 describe "A simple workflow with a decision node using a class to decide with foo/bar strings" do
   before do
@@ -167,7 +129,6 @@ describe "A simple workflow with a decision node using a class to decide with fo
   end
 end
 
-
 describe "A simple workflow with a decision node using a custom class to decide with yes/no" do
   before do
     create_simple_decision_workflow "another_test", "yes", "no", :custom_class => "TestDecision"
@@ -180,24 +141,6 @@ describe "A simple workflow with a decision node using a custom class to decide 
   end
   
   it "should take the 'no' transition if false" do
-    TestDecision.value = false
-    perform_decision_workflow
-    @model.test_workflow.node.should == @no_node
-  end
-end
-
-describe "A simple workflow with a decision node using a custom class to decide with true/false" do
-  before do
-    create_simple_decision_workflow "another_test", "true", "false", :custom_class => "TestDecision"
-  end
-  
-  it "should take the 'true' transition if true" do
-    TestDecision.value = true
-    perform_decision_workflow
-    @model.test_workflow.node.should == @yes_node
-  end
-  
-  it "should take the 'false' transition if false" do
     TestDecision.value = false
     perform_decision_workflow
     @model.test_workflow.node.should == @no_node
@@ -222,7 +165,6 @@ describe "A simple workflow with a decision node using a custom class to decide 
   end
 end
 
-
 describe "A simple workflow with a decision node using a custom class to decide with foo/bar strings" do
   before do
     create_simple_decision_workflow "another_test", "foo", "bar", :custom_class => "TestDecision"
@@ -240,9 +182,6 @@ describe "A simple workflow with a decision node using a custom class to decide 
     @model.test_workflow.node.should == @no_node
   end
 end
-
-
-
 
 describe "A simple workflow with a nonexistent decision method or class" do
   before do

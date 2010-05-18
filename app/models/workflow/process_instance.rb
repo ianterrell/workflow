@@ -4,12 +4,18 @@ class Workflow::ProcessInstance < ActiveRecord::Base
   belongs_to :process, :class_name => "Workflow::Process", :foreign_key => "process_id"
   
   has_many :process_instance_nodes, :class_name => "Workflow::ProcessInstanceNode", :foreign_key => "process_instance_id", :dependent => :destroy
+
   has_many :nodes, :through => :process_instance_nodes
   has_one :node, :through => :process_instance_nodes
   alias_method :state, :node
+
+  # TODO: Spec this out
+  has_many :transitions, :finder_sql => 'SELECT workflow_transitions.* FROM workflow_transitions JOIN workflow_nodes ON workflow_transitions.from_node_id = workflow_nodes.id JOIN workflow_process_instance_nodes ON workflow_process_instance_nodes.node_id = workflow_nodes.id WHERE workflow_process_instance_nodes.id in (#{self.process_instance_nodes.map(&:id)});', :uniq => true
   
   scope :process_named, lambda { |name| joins(:process).where('workflow_processes.name = ? ', name) }
   
+  # TODO:  Update doc below for fork specific stuff
+  #
   # This method attempts to move the instance along the transition named out of the current node.
   # 
   # It accepts either a single transition name as an argument, or an array of them.  In the case of
@@ -30,28 +36,43 @@ class Workflow::ProcessInstance < ActiveRecord::Base
   # If no valid transition is found, it raises NoSuchTransition
   # 
   # Workflow currently only supports sequential processes.  Forks and joins will change this method.
-  def transition!(name)
-    transitions = if name.is_a? Array
-      name.map{|n| node.transitions(true).named(n.to_s)}.flatten.uniq
+  def transition!(name, disambiguation = nil)
+    if disambiguation.nil?
+      possible_pins = self.process_instance_nodes.with_transition_named(name.to_s)
+      raise Workflow::AmbiguousTransition.new("More than one transition named '#{name}' was found.") if possible_pins.size > 1
+      process_instance_node = possible_pins.first
+    elsif disambiguation.is_a?(Workflow::ProcessInstanceNode) && disambiguation.process_instance == self
+      process_instance_node = disambiguation
+    elsif disambiguation.is_a?(Workflow::Node) && disambiguation.process == process
+      process_instance_node = process_instance_nodes.for_node(disambiguation).first
     else
-      node.transitions.named(name.to_s)
-    end    
+      raise Workflow::NoSuchTransition.new("Disambiguation passed is not a ProcessInstanceNode that belongs to this ProcessInstance (transition named '#{name}').")
+    end
+    raise Workflow::NoSuchTransition.new("Could not find a transition named '#{name}' from current nodes.") unless process_instance_node
+    
+    from_node = process_instance_node.node
+    transitions = from_node.transitions.named(name.to_s)
     raise Workflow::NoSuchTransition if transitions.empty?
-
+    
     transition_to_take = transitions.first
     return false unless transition_to_take.guards_pass?(instance)
+    from_node = node
     
-    new_node = transition_to_take.to_node      
-    process_instance_node = self.process_instance_nodes.first
-    node.execute_exit_callbacks self
-    node.cancel_scheduled_actions self
+    to_node = transition_to_take.to_node
+    from_node.execute_exit_callbacks self
+    from_node.cancel_scheduled_actions self
     transition_to_take.execute_callbacks self
-    process_instance_node.node = new_node
+    process_instance_node.node = to_node
     process_instance_node.save!
     self.reload
-    new_node.schedule_actions self
-    new_node.execute_enter_callbacks self
+    to_node.schedule_actions self
+    to_node.execute_enter_callbacks self
 
-    new_node
+    to_node
+  end
+  
+protected
+  def process_instance_nodes_with_transition
+    
   end
 end

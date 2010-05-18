@@ -17,6 +17,6 @@ class Workflow::Task < ActiveRecord::Base
   # Marks a task as complete by setting completed_at and advancing the process instance along the 'completed' transition.
   def complete!
     self.completed_at = Time.now
-    process_instance.transition! :completed
+    process_instance.transition! :completed, node
   end
 end

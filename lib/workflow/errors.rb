@@ -7,6 +7,13 @@ module Workflow
   # node.
   class NoSuchTransition < Error; end
   
+  # Raised when a process is attempted to be transitioned by a transition name
+  # that exists in more than one current process instance node.  This can occur in
+  # forked processes, as the workflow may be in multiple nodes at once.  You can
+  # avoid this by specifying which process instance node should be transitioned as
+  # a second parameter to transition!.
+  class AmbiguousTransition < Error; end
+  
   # Raised from DecisionNode when the instance on the workflow either does not respond to
   # the name of the decision or there is no custom class of NameDecision format
   class NoWayToMakeDecision < Error; end

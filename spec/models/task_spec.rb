@@ -33,7 +33,7 @@ describe Workflow::Task do
   end
   
   it "should try to transition its process instance along the transition :completed when completed" do
-    @task.process_instance.should_receive(:transition!).with(:completed)
+    @task.process_instance.should_receive(:transition!).with(:completed, @task.node)
     @task.complete! rescue nil
   end
 end

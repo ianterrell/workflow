@@ -18,7 +18,7 @@ class Workflow::ScheduledAction < Workflow::Action
       process_instance.instance.send generator.action
       schedule_repeat
     else
-      process_instance.transition! generator.transition 
+      process_instance.transition! generator.transition, generator.node
     end
   end
   

@@ -113,7 +113,8 @@ module Workflow
       end
       
       # Creates a DecisionNode object with the given name to exist in the current process.  
-      # The block passed to it will be used to create Transition objects.
+      # The block passed to it will be used to create Transition objects.  For decisions that return true
+      # or false, the transition names "yes" and "no" should be used.
       #
       # Raises an Error if not called from within a valid create_process or update_process block.
       # 
@@ -200,6 +201,52 @@ module Workflow
       def action(name, options={}, &block)
         options[:class_name] = options[:action_class]
         create_node Workflow::ActionNode, name, options, &block
+      end
+      
+      # Creates a ForkNode object with the given name to exist in the current process.  
+      # The block passed to it will be used to create Transition objects.  
+      #
+      # All transitions created will be instantly followed and the process will exist in multiple states.
+      # See ForkNode for details.
+      #
+      # Raises an Error if not called from within a valid create_process or update_process block.
+      # 
+      # Required:
+      # * name parameter -- Symbol or string to represent the name of the state.  Must be unique in the process.
+      # 
+      # Optional:
+      # * Takes all of the same options as state
+      #
+      # Examples:
+      #   fork :do_three_things do
+      #     transition :branch_a, :to => :task_a
+      #     transition :branch_b, :to => :task_b
+      #     transition :branch_c, :to => :task_c
+      #   end
+      def fork(name, options={}, &block)
+        create_node Workflow::ForkNode, name, options, &block
+      end
+
+      # Creates a JoinNode object with the given name to exist in the current process.  
+      # The block passed to it will be used to create Transition objects.  
+      #
+      # All join nodes should include one transition named "continue", which will be followed
+      # when the last branch of the fork reaches the node.  See JoinNode for details.
+      #
+      # Raises an Error if not called from within a valid create_process or update_process block.
+      # 
+      # Required:
+      # * name parameter -- Symbol or string to represent the name of the state.  Must be unique in the process.
+      # 
+      # Optional:
+      # * Takes all of the same options as state
+      #
+      # Examples:
+      #   join :did_all_three_things do
+      #     transition :continue, :to => :next_state
+      #   end      
+      def join(name, options={}, &block)
+        create_node Workflow::JoinNode, name, options, &block
       end
       
       # Creates a node based on a class that your application defines.

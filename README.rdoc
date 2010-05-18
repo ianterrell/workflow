@@ -13,10 +13,15 @@ Constellation Workflow draws much inspiration from the Java project jBPM (http:/
 
 == Distinguishing Features
 
-* Constellation Workflow is designed for developers and business users to be able to work together.
-* Automated tasks can be managed with DelayedJob, Amazon's Simple Notification Service or Simple Queue Service, or a custom implementation you provide.
-* The interface to workflow uses all the prettiness Ruby is capable of.
-* Processes can be specified in Ruby or YAML, and can be created with our graphical creation web tool.
+Constellation Workflow provides a significant number of workflow related features that ActiveModel::StateMachine and other implementations do not:
+
+* Parallel branch execution using forked processes
+* Automated process branching using decisions calculated at runtime
+* Timers for automatically moving through the process or executing actions
+* Built in support for human-completed tasks
+* Workflow process change management with migrations
+
+If you have a very simple workflow that does not need the above features, ActiveModel::StateMachine might be a better choice.
 
 == Development Roadmap
 

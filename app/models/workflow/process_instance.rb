@@ -53,12 +53,13 @@ class Workflow::ProcessInstance < ActiveRecord::Base
     from_node = process_instance_node.node
     transitions = from_node.transitions.named(name.to_s)
     raise Workflow::NoSuchTransition if transitions.empty?
-    
     transition_to_take = transitions.first
-    return false unless transition_to_take.guards_pass?(instance)
-    from_node = node
-    
     to_node = transition_to_take.to_node
+    
+    # Transition guards pass?
+    return false unless transition_to_take.guards_pass?(instance)
+    
+    # Callback order is very specific.
     from_node.execute_exit_callbacks self
     from_node.cancel_scheduled_actions self
     transition_to_take.execute_callbacks self

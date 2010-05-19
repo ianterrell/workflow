@@ -14,3 +14,5 @@ gem "rspec-rails", ">= 2.0.0.beta"
 
 # Nothing really functional changed on this branch, just deprecation warnings
 gem "delayed_job", :git => "http://github.com/constellationsoft/delayed_job.git"
+
+gem "constellation-base", :require => "constellation/base"

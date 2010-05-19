@@ -115,4 +115,8 @@ describe Workflow::Node do
   it "should have a scope by name" do
     Workflow::Node.named(@node.name).should include(@node)
   end
+  
+  it "should be extensible by the host application" do
+    Workflow::Node.new.should respond_to(:host_app_provided_method)
+  end
 end

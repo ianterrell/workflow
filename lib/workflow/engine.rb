@@ -2,6 +2,7 @@ require 'workflow'
 require 'workflow/errors'
 require 'workflow/callbacks'
 require 'rails'
+require 'active_record'
 
 module Workflow
   # This is the Rails Engine that powers it all.
@@ -15,6 +16,7 @@ module Workflow
     
     # Configuration options are just namespaced to workflow
     config.workflow = ActiveSupport::OrderedOptions.new
+    config.workflow.timer_engine = :delayed_job
     
     initializer "workflow.default" do |app|
       ActiveRecord::Base.send :include, Workflow::Base

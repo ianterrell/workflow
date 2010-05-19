@@ -3,10 +3,10 @@
 # on the model.  If the generator's 'transition' field is set, it does the former; if not, the latter.
 # 
 # It is necessary for another process to periodically poll the database to execute actions
-# on time.  Currently this is implemented using Delayed::Job.
+# on time.  If config.workflow.timer_engine is :delayed_job this class will automatically manage
+# a Delayed::Job based implementation for you, although you still must run the worker.
 class Workflow::ScheduledAction < Workflow::Action
   belongs_to :generator, :class_name => "Workflow::ScheduledActionGenerator", :foreign_key => "generator_id"
-  belongs_to :delayed_job, :class_name => "::Delayed::Job", :foreign_key => "delayed_job_id", :dependent => :destroy
   
   validates_presence_of :scheduled_for
   
@@ -35,17 +35,25 @@ class Workflow::ScheduledAction < Workflow::Action
   # Cancels this action.  It sets the canceled_at timestamp and destroys the associated Delayed::Job.
   def cancel!
     update_attribute :canceled_at, Time.now
-    delayed_job.destroy if delayed_job
+    delayed_job.destroy if Rails.application && (Rails.application.config.workflow.timer_engine == :delayed_job) && delayed_job
   end
   
-  after_create :create_delayed_job
+  ###
+  # Delayed Job implementation
+  
+  if Rails.application && Rails.application.config.workflow.timer_engine == :delayed_job
+
+    belongs_to :delayed_job, :class_name => "::Delayed::Job", :foreign_key => "delayed_job_id", :dependent => :destroy
+    after_create :create_delayed_job
+  
+    def create_delayed_job #:nodoc:
+      job = Delayed::Job.enqueue self, 0, scheduled_for
+      self.update_attribute :delayed_job_id, job.id
+    end
+
+  end
   
 protected
-  def create_delayed_job #:nodoc:
-    job = Delayed::Job.enqueue self, 0, scheduled_for
-    self.update_attribute :delayed_job_id, job.id
-  end
-  
   def schedule_repeat #:nodoc:
     if generator.repeat?
       unless generator.repeat_count && Workflow::ScheduledAction.where(:generator_id => generator.id).where(:process_instance_id => process_instance.id).count >= generator.repeat_count

@@ -3,7 +3,7 @@
 # on the model.  If the generator's 'transition' field is set, it does the former; if not, the latter.
 # 
 # It is necessary for another process to periodically poll the database to execute actions
-# on time.  If config.workflow.timer_engine is :delayed_job this class will automatically manage
+# on time.  If config.constellation.workflow.timer_engine is :delayed_job this class will automatically manage
 # a Delayed::Job based implementation for you, although you still must run the worker.
 class Workflow::ScheduledAction < Workflow::Action
   belongs_to :generator, :class_name => "Workflow::ScheduledActionGenerator", :foreign_key => "generator_id"
@@ -35,13 +35,13 @@ class Workflow::ScheduledAction < Workflow::Action
   # Cancels this action.  It sets the canceled_at timestamp and destroys the associated Delayed::Job.
   def cancel!
     update_attribute :canceled_at, Time.now
-    delayed_job.destroy if Rails.application && (Rails.application.config.workflow.timer_engine == :delayed_job) && delayed_job
+    delayed_job.destroy if Rails.application && (Rails.application.config.constellation.workflow.timer_engine == :delayed_job) && delayed_job
   end
   
   ###
   # Delayed Job implementation
   
-  if Rails.application && Rails.application.config.workflow.timer_engine == :delayed_job
+  if Rails.application && Rails.application.config.constellation.workflow.timer_engine == :delayed_job
 
     belongs_to :delayed_job, :class_name => "::Delayed::Job", :foreign_key => "delayed_job_id", :dependent => :destroy
     after_create :create_delayed_job

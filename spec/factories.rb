@@ -1,4 +1,4 @@
-require 'workflow'
+require 'constellation/workflow'
 require 'app/models/workflow/process'
 require 'app/models/workflow/process_instance'
 require 'app/models/workflow/process_instance_node'

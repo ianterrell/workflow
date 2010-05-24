@@ -41,8 +41,7 @@ class Workflow::ScheduledAction < Workflow::Action
   ###
   # Delayed Job implementation
   
-  if Rails.application && Rails.application.config.constellation.workflow.timer_engine == :delayed_job
-
+  if Rails.application.config.constellation.workflow.timer_engine == :delayed_job
     belongs_to :delayed_job, :class_name => "::Delayed::Job", :foreign_key => "delayed_job_id", :dependent => :destroy
     after_create :create_delayed_job
   
@@ -50,7 +49,6 @@ class Workflow::ScheduledAction < Workflow::Action
       job = Delayed::Job.enqueue self, 0, scheduled_for
       self.update_attribute :delayed_job_id, job.id
     end
-
   end
   
 protected

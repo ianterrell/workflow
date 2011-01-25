@@ -1,7 +1,6 @@
-<b>This is not free software.</b>  See LICENSE for details.
-= Constellation Workflow
+= Workflow
 
-Constellation Workflow is a business process management engine written in Ruby using ActiveRecord for persistence.
+Workflow is a business process management engine written in Ruby using ActiveRecord for persistence.
 
 == What is workflow?
 
@@ -9,11 +8,11 @@ Workflow is the management of long running processes in your application, with t
 
 A common use case in content management systems is having different stakeholders create, copyedit, proofread, approve, and publish content, with some actions occurring in sequence and some in parallel.  A common use case in e-commerce systems is processing orders:  picking, packing, and shipping the items, potentially in parallel from different warehouses, and charging the customer only when the items are shipped.
 
-Constellation Workflow draws much inspiration from the Java project jBPM (http://www.jboss.org/jbpm) and the work of The Workflow Patterns Initiative (http://workflowpatterns.com).
+This implementation draws much inspiration from the Java project jBPM (http://www.jboss.org/jbpm) and the work of The Workflow Patterns Initiative (http://workflowpatterns.com).
 
 == Distinguishing Features
 
-Constellation Workflow provides a significant number of workflow related features that ActiveModel::StateMachine and other implementations do not:
+Workflow provides a significant number of workflow related features that ActiveModel::StateMachine and other implementations do not:
 
 * Parallel branch execution using forked processes
 * Automated process branching using decisions calculated at runtime
@@ -25,7 +24,7 @@ If you have a very simple workflow that does not need the above features, Active
 
 == Development Roadmap
 
-Constellation Workflow is under active development by Constellation Software.  Version 1 will include functionality common to most simple but non-trivial workflow processes, and includes support for
+Workflow is under active development.  Version 1 will include functionality common to most simple but non-trivial workflow processes, and includes support for
 
 * Sequential and parallel processes
 * Timer-initiated actions
@@ -38,4 +37,4 @@ Future iterations will include additional patterns from The Workflow Patterns In
 
 === Copyright
 
-Copyright (c) 2010 Constellation Software. <b>This is not free software.</b>  See LICENSE for details.
+Copyright (c) 2010 Ian Terrell.

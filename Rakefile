@@ -6,38 +6,27 @@ require 'rake/gempackagetask'
 require 'rspec/core'
 require 'rspec/core/rake_task'
 
-Rspec::Core::RakeTask.new(:spec)
+RSpec::Core::RakeTask.new(:spec)
 
 task :default => :spec
 
 Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'Constellation Workflow'
+  rdoc.title    = 'Workflow'
   rdoc.options << '--line-numbers' << '--inline-source'
   rdoc.rdoc_files.include('README.rdoc')
   rdoc.rdoc_files.include('lib/**/*.rb', 'app/**/*.rb')
 end
 
 spec = Gem::Specification.new do |gem|
-  gem.name = "constellation-workflow"
+  gem.name = "workflow"
   gem.summary = "A module for managing long running business processes."
   gem.description = "A module for managing long running business processes."
-  gem.email = "ian@constellationsoft.com;jeff@constellationsoft.com"
-  gem.homepage = "http://github.com/constellationsoft/workflow"
-  gem.authors = ["Ian Terrell", "Jeff Bozek"]
+  gem.email = "ian.terrell@gmail.com"
+  gem.homepage = "http://github.com/ianterrell/workflow"
+  gem.authors = ["Ian Terrell"]
   gem.files = Dir["{lib}/**/*", "{app}/**/*", "{config}/**/*"]
   gem.version = "0.0.1"
-  gem.post_install_message = <<-EOM
-#{"*"*50}
-
-  Thank you for installing ConstellationSoft's Workflow module.
-
-  This is not free software!
-
-  Please see the full license at http://github.com/constellationsoft/workflow/blob/master/LICENSE
-
-#{"*"*50}
-EOM
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|

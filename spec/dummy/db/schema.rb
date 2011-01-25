@@ -1,10 +1,11 @@
-# This file is auto-generated from the current state of the database. Instead of editing this file, 
-# please use the migrations feature of Active Record to incrementally modify your database, and
-# then regenerate this schema definition.
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your database schema. If you need
-# to create the application database on another system, you should be using db:schema:load, not running
-# all the migrations from scratch. The latter is a flawed and unsustainable approach (the more migrations
+# Note that this schema.rb definition is the authoritative source for your
+# database schema. If you need to create the application database on another
+# system, you should be using db:schema:load, not running all the migrations
+# from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
 # It's strongly recommended to check this file into your version control system.
@@ -82,14 +83,20 @@ ActiveRecord::Schema.define(:version => 20100512233128) do
     t.integer  "repeat_count"
     t.boolean  "repeat",       :default => false
     t.string   "action"
+    t.string   "transition"
+    t.string   "custom_class"
+    t.string   "type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "workflow_scheduled_action_generators", ["node_id"], :name => "index_workflow_scheduled_action_generators_on_node_id"
 
   create_table "workflow_tasks", :force => true do |t|
     t.integer  "node_id"
     t.integer  "process_instance_id"
     t.integer  "generator_id"
+    t.integer  "delayed_job_id"
     t.string   "assigned_to"
     t.string   "type"
     t.datetime "completed_at"
@@ -98,6 +105,12 @@ ActiveRecord::Schema.define(:version => 20100512233128) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "workflow_tasks", ["delayed_job_id"], :name => "index_workflow_tasks_on_delayed_job_id"
+  add_index "workflow_tasks", ["generator_id"], :name => "index_workflow_tasks_on_generator_id"
+  add_index "workflow_tasks", ["node_id"], :name => "index_workflow_tasks_on_node_id"
+  add_index "workflow_tasks", ["process_instance_id"], :name => "index_workflow_tasks_on_process_instance_id"
+  add_index "workflow_tasks", ["type"], :name => "index_workflow_tasks_on_type"
 
   create_table "workflow_transitions", :force => true do |t|
     t.string   "name"

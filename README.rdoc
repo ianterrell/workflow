@@ -1,4 +1,4 @@
-<b>This is not free software.</b>  See LICENSE for details.
+<b>This is now free software!</b>
 = Constellation Workflow
 
 Constellation Workflow is a business process management engine written in Ruby using ActiveRecord for persistence.
